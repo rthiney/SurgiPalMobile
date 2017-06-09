@@ -17,6 +17,8 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { SupportPage } from '../pages/support/support';
 import { AuthService, LoggerService, NotifyService } from "../shared/index";
 import { StatusBar, Splashscreen } from 'ionic-native';
+import { HockeyApp } from 'ionic-hockeyapp';
+
 //declare var WindowsAzure: any; 
 // ar client = new WindowsAzure.MobileServiceClient(AzureMobile.url);
 export interface PageInterface {
@@ -89,9 +91,9 @@ export class SurgiPalApp {
             // Here you can do any higher level native things you might need.
             StatusBar.styleDefault();
             Splashscreen.hide();
-      //c53076f455f943508c88bfecf0a3bb40
+  
       // The Android ID of the app as provided by the HockeyApp portal. Can be null if for iOS only.
-      let androidAppId = 'c53076f455f943508c88bfecf0a3bb40';
+      let androidAppId = '67f7ab86a12c4fa1b48e9a4ba5aec358';
       // The iOS ID of the app as provided by the HockeyApp portal. Can be null if for android only.
 
       // Specifies whether you would like crash reports to be automatically sent to the HockeyApp server when the end user restarts the app.
