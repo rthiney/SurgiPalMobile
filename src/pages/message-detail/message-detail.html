@@ -1,0 +1,21 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Message Detail</ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+
+<ion-content padding  class="message-detail">
+    <h1>{{message.subject}}</h1> 
+
+       <p>   {{message.createdAt | date:'shortDate' }} at  {{message.createdAt | date:'shortTime' }} 
+    </p>
+
+
+   <p *ngIf="message.HospitalEmail">{{message.HospitalEmail}}</p>
+     <p *ngIf="message.email">{{message.email}}</p>
+    <p>{{message.message}}</p>
+
+    {{messageData?.viewcount}}
+</ion-content>

@@ -1,0 +1,11 @@
+{
+  "android": {
+    "release": {
+      "keystore": "d:\\surgipalmobile.keystore",
+      "storePassword": "12qw!@QW",
+      "alias": "rthiney",
+      "password": "12qw!@QW",
+      "keystoreType": ""
+    }
+  }
+}

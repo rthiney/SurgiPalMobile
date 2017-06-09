@@ -1,0 +1,51 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Account</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="outer-content map-page"> 
+    <ion-row>
+        <ion-col>
+            <div padding-top text-center *ngIf="auth.name">
+                <img src="{{auth.picture}}" alt="avatar">
+                <h2> {{auth.name}}</h2>
+
+
+   <p><strong>ID: </strong> {{auth.globalId}}</p>
+        <p><strong>SpID: </strong> {{auth.fosId}}</p>
+
+                <!--<ion-list inset>
+                    <button ion-item (click)="updatePicture()">Update Picture</button>
+                    <button ion-item (click)="changeUsername()">Change Username</button>
+                    <button ion-item (click)="changePassword()">Change Password</button>
+                    <button ion-item (click)="support()">Support</button>
+                    <button ion-item (click)="logout()">Logout</button>
+
+                    <p><strong>ID: </strong> {{auth.globalId}}</p>
+                    <p><strong>SpID: </strong> {{auth.fosId}}</p>
+                    <p><strong>Name: </strong> {{auth.name}}</p>
+                    <p><strong>Email: </strong> {{auth.email}}</p>
+                    <p><strong>Created At: </strong> {{auth.created_at}}</p>
+                    <p><strong>Updated At: </strong> {{auth.updated_at}}</p>
+                    <strong>Roles: </strong>
+                    <ul>
+                        <li *ngFor="let r of auth.roles">
+                            {{r}}
+                        </li>
+                    </ul>
+
+                </ion-list>-->
+            </div>
+        </ion-col>
+        <ion-col>
+            <div style="height: 100%; width: 100%" #mapCanvas id="map_canvas"></div>
+        </ion-col>
+    </ion-row>
+
+
+
+</ion-content>

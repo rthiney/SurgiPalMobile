@@ -1,0 +1,14 @@
+<ion-tabs [selectedIndex]="mySelectedIndex">
+    <ion-tab [tabBadge]="pulseData" [root]="tab1Root"
+         tabIcon="pulse"
+         tabTitle="Today"></ion-tab> 
+         <ion-tab [tabBadge]="messageData" [root]="tab2Root"
+         tabIcon="mail"
+         tabTitle="Messages"></ion-tab> 
+<ion-tab [tabBadge]="accountData"  [root]="tab3Root"
+         tabIcon="stats"
+         tabTitle="Stats"></ion-tab>  
+<ion-tab  [root]="tab4Root"
+         tabIcon="information-circle"
+         tabTitle="About"></ion-tab>
+         </ion-tabs>

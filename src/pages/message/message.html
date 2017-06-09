@@ -1,0 +1,128 @@
+<ion-header>
+    <ion-navbar no-border-bottom>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+        <ion-segment [(ngModel)]="segment" (ionChange)="updateSegment()">
+             <ion-segment-button value="all">
+                All
+                <ion-badge color="secondary" item-right>{{metrics?.unread + metrics?.read}} </ion-badge>
+            </ion-segment-button>
+            <ion-segment-button value="unread">
+                Unread
+                <ion-badge color="secondary" item-right>{{metrics?.unread}} </ion-badge>
+            </ion-segment-button>
+            <ion-segment-button value="read">
+                Read
+                <ion-badge color="favorite" item-right> {{metrics?.read}}</ion-badge>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-navbar>
+
+</ion-header>
+<!--<ion-content class="outer-content speaker-list">
+    <ion-list>
+        <ion-item *ngFor="let m of messages">
+            <ion-avatar item-left>
+            <img src="{{m.doctorImage}}">
+            </ion-avatar>
+            <h2>{{m.subject}}</h2>
+            <p>{{m.message}}</p>v
+        </ion-item>
+
+    </ion-list>
+</ion-content>-->
+<ion-content class="outer-content message-list">
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list #messageList [hidden]="shownMessages === 0">
+
+
+
+
+
+        <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
+
+            <ion-item-divider sticky>
+                <ion-label>
+                    {{group.d}}
+                </ion-label>
+            </ion-item-divider>
+          
+
+                <ion-item-sliding *ngFor="let m of group.messages"  [attr.class]="m.message.viewed ? 'isRead1' : 'isRead0'" [hidden]="m.message.hide">  
+                    <ion-item (click)="showDetails(m.message)"  >
+                        <ion-avatar item-left>
+                            <img [src]="m.message.DoctorImage">
+                        </ion-avatar>
+                        <h2>{{m.message.subject}} </h2>
+                        <h3>{{m.message.message}}</h3>
+                        <p> {{m.message.createdAt | date:'longDate' }} at {{m.message.createdAt | date:'shortTime' }} <i>( {{m.message.createdAt | amTimeAgo}}) </i> </p>
+                    </ion-item>
+                    <ion-item-options side="left">
+                        <button ion-button color="danger" (click)="delete(m.message)">
+        <ion-icon name="trash"></ion-icon>
+        Delete
+      </button>delete
+                        <!--<button ion-button color="secondary">
+        <ion-icon name="call"></ion-icon>
+        Call
+      </button>-->
+                    </ion-item-options>
+                    <ion-item-options side="right">
+                        <button ion-button color="primary" (click)="reply(m.message)">
+        <ion-icon name="mail"></ion-icon>
+        Reply
+      </button>
+                    </ion-item-options>
+                </ion-item-sliding> 
+
+        </ion-item-group>
+
+        <!--                
+                <ion-col col-12 col-md-12 align-self-stretch align-self-center *ngFor="let m of messages">
+                    <ion-card class="message-card">
+
+                        <ion-card-header  >
+                            <button ion-item detail-none (click)="showDetails(m)"  [attr.class]="m.viewed==0 ? 'isRead1' : 'isRead0'">
+                              {{m.subject}}
+                            </button>
+                        </ion-card-header>
+
+                        <ion-card-content class="outer-content">
+                            <h3>{{m.message}}</h3>
+                        </ion-card-content>
+
+                        <ion-row no-padding>
+                            <ion-col text-left col-md-4>
+                                <button ion-button clear small color="primary" icon-left (click)="reply(m)">
+                                  <ion-icon name='undo'></ion-icon>
+                                Reply
+                                </button>
+                            </ion-col>
+                            <ion-col text-center  col-md-4>
+                                <button ion-button clear small color="primary" icon-left (click)="showDetails(m)">
+          <ion-icon name='share-alt'></ion-icon>
+         Details
+        </button>
+                            </ion-col>
+                            <ion-col text-right  col-md-4>
+                                <button ion-button clear small color="primary" icon-left (click)="showContactInfo(m)">
+          <ion-icon name='chatboxes'></ion-icon>
+          Contact
+        </button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card>
+                </ion-col>-->
+
+    </ion-list>
+    <ion-list-header [hidden]="shownMessages !== 0">
+        No Messages Today!
+    </ion-list-header>
+
+</ion-content>

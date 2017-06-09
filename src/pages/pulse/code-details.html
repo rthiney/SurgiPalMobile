@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-navbar *navbar>
+        <ion-buttons start>
+            <button (click)="dismiss()">
+      Cancel
+    </button>
+        </ion-buttons>
+        <ion-title>{{codeType}} Codes</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding class="sample-modal-page">
+    <div> Here are the <strong>{{codeType}}</strong> codes for surgery <strong>{{ pulse.surgery.patient }}.</strong></div>
+   
+   <p>{{pulse.surgery.cptCodes}}</p>
+   <p>{{pulse.surgery.diagnosisCodes}}</p>
+    <ion-list *ngFor="let c of codes">
+
+        <ion-chip #chip>
+            <ion-label>{{ c }}</ion-label>
+            <button ion-button (click)="delete(chip)">
+    <ion-icon name="close"></ion-icon>
+  </button>
+        </ion-chip>
+    </ion-list>
+
+<ion-row>
+    <ion-col> <button ion-button block (click)="dismiss()" color="secondary">Cancel</button>
+    </ion-col>
+        <ion-col>       <button ion-button block (click)="revert()" color="primary">Undo</button>
+    </ion-col>
+        <ion-col>       <button ion-button block (click)="save()" color="favorite">Save</button>
+    </ion-col>
+    </ion-row>
+    
+</ion-content>

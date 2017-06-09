@@ -1,0 +1,236 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>About SurgiPal</ion-title>
+        <!--<ion-buttons end>
+            <button ion-button icon-only (click)="presentPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+        </ion-buttons>-->
+    </ion-navbar>
+
+ <ion-toolbar no-border-top>
+ <ion-segment [(ngModel)]="info">
+            <ion-segment-button value="services">
+                Services
+            </ion-segment-button>
+            <ion-segment-button value="benefits">
+                Benefits
+            </ion-segment-button>
+            <ion-segment-button value="who">
+                Who are we?
+            </ion-segment-button>
+        </ion-segment>
+  </ion-toolbar>
+
+
+</ion-header>
+
+<ion-content>
+    <div class="about-header">
+        <img src="assets/img/background2.jpg" height=200 width='100%' alt="SurgiPal">
+    </div>
+    <div padding class="about-info">
+        <h4>SurgiPal</h4>
+        <p>
+            A physician driven cloud-based preference card system and OR platform for surgeries and procedures
+        </p>
+    </div>
+
+ 
+    <div [ngSwitch]="info"  padding class="about-info">
+        <ion-list *ngSwitchCase="'services'">
+            <p class='text'> Doctors, hospitals, ambulatory surgery centers (ASCs) and vendors deserve easy to use tools that facilitate the
+                process of planning, booking and billing for surgeries and procedures. Surgipal was created by a team of
+                physicians to bring surgical preference cards into the digital age. Surgipal allows physicians to create,
+                edit and manage their surgery or procedure preference cards online. Doctors and their staff setup, maintain
+                and update their preference cards. Surgeries and procedures are scheduled online with preference cards specifically
+                tailored to the patient. Hospitals, ASCs and vendors access these preferences anywhere and anytime for planning
+                and booking purposes. Doctors can bill for surgeries online with the simple click of a button. Surgipal keeps
+                a log of all your surgeries and procedures for practice analytics and research purposes. </p>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'benefits'">
+
+            <ion-card>
+                <ion-card-header>
+                    Consistent!
+                </ion-card-header>
+                <ion-card-content>
+                    Works at all your surgical locations. Change your preferences and all locations will know about it!
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card>
+                <ion-card-header>
+                    Empowering!
+                </ion-card-header>
+                <ion-card-content>
+                    Take over control and ownership of your surgery or procedure preferences with minimal work.
+                </ion-card-content>
+            </ion-card>
+
+          
+            <ion-card>
+                <ion-card-header>
+                    Accurate!
+                </ion-card-header>
+                <ion-card-content>
+                    Do away with generic cards. Every patient is different and surgeries vary. Create personalized surgical preferences specifically
+                    designed for your patient so the OR or procedure suite can plan ahead!
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card>
+                <ion-card-header>
+                    Reassuring!
+                </ion-card-header>
+                <ion-card-content>
+                    Doing a case on a weekend without your favorite team? Your preferences are viewable to your staff online anywhere and anytime.
+                </ion-card-content>
+            </ion-card>
+            <ion-card>
+                <ion-card-header>
+                    Billing!
+                </ion-card-header>
+                <ion-card-content>
+                    Bill for your surgeries by simply clicking a button. All your cases are logged for data analytics.
+                </ion-card-content>
+            </ion-card>
+ 
+ 
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'who'">
+           
+
+                    <ion-card>
+                        <ion-item>
+                            <ion-thumbnail item-left>
+                                <img src="assets/img/jmv.png">
+                            </ion-thumbnail>
+                            <h2>Jean Marc Voyadzis, MD FACS</h2>
+                            <p>Chief Executive Officer</p>
+                        </ion-item>
+
+ 
+                        <ion-card-content>
+                            <p c>Jean-Marc Voyadzis, MD, is associate professor in the Department of Neurosurgery and co-director
+                                of the Center for Minimally Invasive Spine Surgery at MedStar Georgetown. He is also director
+                                of Neurosurgery Service at Calvert Memorial Hospital in Prince Frederick, Maryland. Dr. Voyadzis
+                                earned his medical degree from Georgetown University School of Medicine, where he graduated
+                                Summa Cum Laude and received the Kober Medal for the highest overall record of academic performance.
+                                He completed a residency in neurosurgery at MedStar Georgetown University Hospital and a
+                                fellowship in complex and minimally invasive spine surgery at the University of Chicago.
+                                With broad interests and expertise in both brain and spinal surgery, he is board certified
+                                by the American Board of Neurological Surgery, and is an active member of several neurosurgical
+                                societies
+                            </p>
+                            <p>Dr. Voyadzis has published numerous book chapters, journal articles, and abstracts on various
+                                topics related to neurosurgery. He has been invited to speak as an expert on spine surgery
+                                and has trained surgeons all over the world, including the United States, Germany, Spain,
+                                France, Brazil, and China.
+                            </p>
+                        </ion-card-content>
+
+                        <ion-row>
+                            <ion-col>
+                                <button ion-button color="primary" clear small icon-left>
+            <ion-icon name="logo-linkedin"></ion-icon> 
+          </button>
+                            </ion-col>
+                            <ion-col>
+                                <button ion-button color="primary" clear small icon-left>
+             <ion-icon name="logo-github"></ion-icon> 
+          </button>
+                            </ion-col>
+                            <ion-col center text-center>
+                                <button ion-button color="primary" clear small icon-left>
+         <ion-icon name="logo-facebook"></ion-icon>
+          </button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card>
+                
+                    <ion-card>
+                     <ion-item>
+                       <ion-thumbnail item-left>
+         <img src="assets/img/rt.png" >
+    </ion-thumbnail>
+                            <h2>Raphaël Thiney</h2>
+                            <p>Chief Technology Officer</p>
+                        </ion-item>
+                
+                        <ion-card-content> 
+                        
+                            <p>Raphaël Thiney is a buttoned-up technologist with over 20 year of Web/SaaS experience. A graduate
+                                from Hobart with a B.Sc. in Computer Science, he’s been a key-man technologist to 3 start-ups,
+                                from the first ever movie/music site where users could not only get the movies they wanted
+                                and the music CD’s that were in the movie, too obtaining a commercial mortgage loan online,
+                                too figuring out which hedge fund to invest >100M. He was instrumental in raising over 3M
+                                in capital for his 2nd startup, lead by Charles Ferguson (creator of FrontPage later sold
+                                to Microsoft). His skills were then further honed by the arcane NYC Hedge Fund industry working
+                                at Merrill Lynch, Credit Suisse, and Cerberus Capital. He then lead team of developers both
+                                locally and overseas while Head of Technology for a start-up Hedge-Fund Advisory Group in
+                                NYC. He moved his family to D.C. in 2012 and began consulting.
+                            </p>
+                            <p>He focused his efforts in the Healthcare industry where he consulted for the Council for Affordable
+                                Quality Heath to streamline the Coordination of Benefits issue facing many payers. Successful,
+                                yet bitten by the start-up bug early in his career, his passion for problem solving and technology
+                                led him back to the exciting world of the start-up where he feels at home; building teams
+                                and solving hard, industry-wide problems. He strives for agile and productive teams that
+                                deliver excellence by keeping his hands dirty and close to the metal.
+                            </p>
+                        </ion-card-content>
+ 
+                        <ion-row>
+                            <ion-col>
+                                <button ion-button color="primary" clear small icon-left>
+            <ion-icon name="logo-linkedin"></ion-icon> 
+          </button>
+                            </ion-col>
+                            <ion-col>
+                                <button ion-button color="primary" clear small icon-left>
+             <ion-icon name="logo-github"></ion-icon> 
+          </button>
+                            </ion-col>
+                            <ion-col center text-center>
+                                <button ion-button color="primary" clear small icon-left>
+         <ion-icon name="logo-facebook"></ion-icon>
+          </button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card>
+             
+
+        </ion-list>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ion-content>
