@@ -1,4 +1,5 @@
- 
+import { PageInterface } from '../../app/app.component';
+
 import { Component } from '@angular/core';
 import { NavParams, Platform, Events, LoadingController } from 'ionic-angular';
 
@@ -13,14 +14,19 @@ import { MessageListPage, MessageData, MessageService } from "../message/index";
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
+
+
+ 
+
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  loading: any; 
+  loading: any;
   tab1Root: any = PulsePage;
-    tab2Root: any = MessageListPage;
-  tab3Root: any = AccountPage;
+  tab2Root: any = MessageListPage;
+  tab3Root: any = AccountPage; 
+  tab4Root: any = AboutPage;
 
-    tab4Root: any = AboutPage;
+
   pulseData: number = 0;
   messageData: number = 0;
   accountData: number = 0;
@@ -29,11 +35,11 @@ export class TabsPage {
   constructor(navParams: NavParams, platform: Platform, public events: Events, public surgerySvc: SurgeryData, public messageSvc: MessageData) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
     this.isAndroid = platform.is('android');
+
   }
-  ionViewDidLoad()
-  {
-      this.loadListeners();
-      
+  ionViewDidLoad() {
+    this.loadListeners();
+
   }
   loadListeners() {
     // this.events.subscribe('surgery:metrics', (metrics) => {
@@ -46,22 +52,22 @@ export class TabsPage {
     //   console.log('MESSAGE METRICS EVENT222 ', metrics)
     //   this.messageData = metrics.unread
     // });
-            this.events.subscribe('message:metrics', (metrics) => {
-              
-                console.log('MESSAGE METRICS EVENT ', metrics)
-                      this.messageData = metrics.unread
-                 
-              
-            });
-            this.events.subscribe('surgery:metrics', (metrics) => {
-                console.log('SURGERY METRICS EVENT  ', metrics)
-                     this.pulseData = metrics.today;
-              //  this.appPages[0].badgeValue = metrics.today;
-                //this.appPages[2].badgeValue = metrics.pending;
-           
-            });
+    this.events.subscribe('message:metrics', (metrics) => {
+
+      console.log('MESSAGE METRICS EVENT ', metrics)
+      this.messageData = metrics.unread
+
+
+    });
+    this.events.subscribe('surgery:metrics', (metrics) => {
+      console.log('SURGERY METRICS EVENT  ', metrics)
+      this.pulseData = metrics.today;
+      //  this.appPages[0].badgeValue = metrics.today;
+      //this.appPages[2].badgeValue = metrics.pending;
+
+    });
 
 
   }
- 
+
 }

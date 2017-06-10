@@ -29,15 +29,15 @@ export class SurgeryData {
     } else {
 
       var dateObj = new Date();
-var month = dateObj.getUTCMonth() + 1; //months from 1-12
-var day = dateObj.getUTCDate();
-var year = dateObj.getUTCFullYear();
-   //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
-       var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' +month + '/'+day +'/0';
+      var month = dateObj.getUTCMonth() + 1; //months from 1-12
+      var day = dateObj.getUTCDate();
+      var year = dateObj.getUTCFullYear();
+      //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
+      var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
 
-   //  var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12';
-     //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/today/12';
-// var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12/6/1/2017';
+      //  var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12';
+      //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/today/12';
+      // var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12/6/1/2017';
       console.log("LOADING FROM SERVER", url);
       return this.authHttp.get(url)
         .map(this.processData, this)
@@ -57,7 +57,7 @@ var year = dateObj.getUTCFullYear();
     // loop through each surgery
     this.data.forEach((surgery: PulseViewModel) => {
 
-    surgery.doctorImage = 'https://surgipal.com/uploads/avatars/' +   surgery.doctorImage;
+      surgery.doctorImage = 'https://surgipal.com/uploads/avatars/' + surgery.doctorImage;
       let d = new Date(surgery.term);
       if (d.toLocaleDateString() === today.toLocaleDateString())
         this.metrics.today++;
@@ -67,7 +67,7 @@ var year = dateObj.getUTCFullYear();
       if (d.toLocaleDateString() != currentDate) {
 
         currentDate = d.toLocaleDateString();
-     ///   this.data.dates.push(currentDate);
+        ///   this.data.dates.push(currentDate);
 
 
 
@@ -82,8 +82,8 @@ var year = dateObj.getUTCFullYear();
       }
 
       //handles edge case
-      surgery.cpt = surgery.cpt.replace('level,','level ');
-surgery.diagnosisCode = surgery.diagnosisCode.replace('level,','level ');
+      surgery.cpt = surgery.cpt.replace('level,', 'level ');
+      surgery.diagnosisCode = surgery.diagnosisCode.replace('level,', 'level ');
 
       let newSurgery = {
         surgery: surgery,
@@ -104,7 +104,7 @@ surgery.diagnosisCode = surgery.diagnosisCode.replace('level,','level ');
           this.metrics.cards.push(surgery.preferenceCardName.trim());
         }
       }
- 
+
 
       if (surgery.speciality) {
         if (this.metrics.speciality.indexOf(surgery.speciality.trim()) < 0) {
@@ -187,14 +187,14 @@ surgery.diagnosisCode = surgery.diagnosisCode.replace('level,','level ');
       return m;
     })
   }
-  getSurgeries(queryText = '', excludeTracks: any[] = [], segment = 'not', reset) {
+  getSurgeries(queryText = '', excludeTracks: any[] = [], segment = 'not', reset=false, date:Date=null) {
 
-  if (reset) this.data=null;
-
+    if (reset) this.data = null;
+if (date!=null)
     return this.load().map((data: any) => {
 
-      if(!  this.data.groupedSurgeries) return null;
-  
+      if (!this.data.groupedSurgeries) return null;
+
       let day = this.data.groupedSurgeries;
       day.shownSurgeries = 0;
       queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
@@ -216,9 +216,9 @@ surgery.diagnosisCode = surgery.diagnosisCode.replace('level,','level ');
         });
 
       });
- 
+
       return day;
-  
+
     });
 
 

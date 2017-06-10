@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-   <ion-title>Today's Pulse</ion-title>
+   <ion-title>Today's Pulse for {{date  | date:'shortDate'}}</ion-title>
         <!--<ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
             <ion-segment-button value="not">
                 Not Completed
@@ -11,19 +11,24 @@
             <ion-segment-button value="completed">
                 Completed
             </ion-segment-button>
-        </ion-segment>-->
-
-        <!--<ion-buttons end>
-            <button ion-button icon-only (click)="presentFilter()">
-        <ion-icon ios="ios-options-outline" md="md-options"></ion-icon>
+        </ion-segment> 
+-->
+       <ion-buttons end>
+            <button ion-button icon-only (click)="backDate()">
+  <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
       </button>
-        </ion-buttons>-->
+        </ion-buttons>
+       <ion-buttons end>
+            <button ion-button icon-only (click)="forwardDate()">
+ <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
+      </button>
+        </ion-buttons>
     </ion-navbar>
 
-    <ion-toolbar no-border-top>
+    <!--<ion-toolbar no-border-top>
         <ion-searchbar color="primary" [(ngModel)]="queryText" (ionInput)="updateSchedule()" placeholder="Search">
         </ion-searchbar>
-    </ion-toolbar>
+    </ion-toolbar>-->
 </ion-header>
 
 <ion-content>

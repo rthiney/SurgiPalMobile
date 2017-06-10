@@ -6,11 +6,16 @@ export class LoggerService
   // event(msg: any) { (<any>window).appInsights.trackEvent(msg); this.log(`EVENT: ${msg}`, false); }
   // view(msg: any) { (<any>window).appInsights.trackPageView(msg); this.log(`PAGEVIEW: ${msg}`, false); }
   // error(msg: any) { (<any>window).appInsights.trackException(msg); this.log(msg, true); }
-  console(msg: any, obj?: any) { obj ? console.log(msg, obj) : console.log(msg); }
-  event(msg: any) { this.log(`EVENT: ${msg}`, false); } //(<any>window).appInsights.trackPageView(msg);
-    view(msg: any) { this.log(`PAGEVIEW: ${msg}`, false); } // (<any>window).appInsights.trackPageView(msg);
-    error(msg: any) { this.log(msg, true); } //(<any>window).appInsights.trackException(msg);
- 
+
+
+  // console(msg: any, obj?: any) { obj ? console.log(msg, obj) : console.log(msg); }
+  // event(msg: any) { this.log(`EVENT: ${msg}`, false); } //(<any>window).appInsights.trackPageView(msg);
+  //   view(msg: any) { this.log(`PAGEVIEW: ${msg}`, false); } // (<any>window).appInsights.trackPageView(msg);
+  //   error(msg: any) { this.log(msg, true); } //(<any>window).appInsights.trackException(msg);
+   console(msg: any, obj?: any) { obj ? console.log(msg, obj) : console.log(msg); }
+  event(msg: any) { (<any>window).appInsights.trackPageView(msg); this.log(`EVENT: ${msg}`, false); }  
+    view(msg: any) {(<any>window).appInsights.trackPageView(msg);  this.log(`PAGEVIEW: ${msg}`, false); }  
+    error(msg: any) { (<any>window).appInsights.trackException(msg); this.log(msg, true); } 
   constructor()
   {
 

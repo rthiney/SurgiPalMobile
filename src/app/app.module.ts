@@ -3,10 +3,14 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from "@angular/platform-browser";
 import { Http, HttpModule } from "@angular/http";
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { AuthConfig, AuthHttp } from 'angular2-jwt';
-import { MomentModule } from 'angular2-moment';
+import { AuthConfig, AuthHttp } from 'angular2-jwt'; 
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { Storage } from '@ionic/storage';
+//3rd Party
+import { MomentModule } from 'angular2-moment';
+import { AppInsightsModule, AppInsightsErrorHandler } from 'ng2-appinsights';
+
+
 //General Components
 import { SurgiPalApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
@@ -69,7 +73,7 @@ export function debounce(func, wait, immediate) {
         MessageListPage, MessageDetailPage, MessageReplyModal,
         TabsPage
     ],
-    imports: [
+    imports: [AppInsightsModule,
         BrowserModule, HttpModule, MomentModule,
         IonicModule.forRoot(SurgiPalApp)
     ],
@@ -92,12 +96,14 @@ export function debounce(func, wait, immediate) {
             useFactory: getAuthHttp,
             deps: [Http]
         },
-        { provide: ErrorHandler, useClass: IonicErrorHandler },
+      //  { provide: ErrorHandler, useClass: IonicErrorHandler },
+        { provide: ErrorHandler, useClass: AppInsightsErrorHandler },
             HockeyApp,
         NotifyService,
         SurgeryData,
         MessageData,
-        LoggerService,MessageService
+        LoggerService,
+        MessageService
         
 
     ]

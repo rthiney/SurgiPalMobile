@@ -30,6 +30,7 @@ export interface PageInterface {
     tabComponent?: any;
     badgeValue?: number;
     color?: string;
+    tabRoot? :string;
 }
 
 @Component({
@@ -37,29 +38,30 @@ export interface PageInterface {
 })
 export class SurgiPalApp {
     isLab: boolean;
-    messageMetrics: MessageMetrics;;
+    messageMetrics: MessageMetrics;
     surgeryMetrics: SurgeryMetrics;
+    hockeyapp: HockeyApp;
     // the root nav is a child of the root app component
     // @ViewChild(Nav) gets a reference to the app's root nav
-   @ViewChild(Nav) nav: Nav;
+    @ViewChild(Nav) nav: Nav;
 
     //  @ViewChild('content') content: NavController;
-  @ViewChild(Menu) menu: Menu;
+    @ViewChild(Menu) menu: Menu;
 
-  
+
     // List of pages that can be navigated to from the left menu
     // the left menu only works after login
     // the login page disables the left menu
     appPages: PageInterface[] = [
-            
+
         { title: 'Today', component: TabsPage, tabComponent: PulsePage, icon: 'pulse', index: 0, badgeValue: 0, color: 'favorite' },
         { title: 'Messages', component: TabsPage, tabComponent: MessageListPage, index: 1, icon: 'mail', badgeValue: 0, color: 'dark' },
-            { title: 'Account', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 2, badgeValue: 0, color: 'danger' },
-                { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle', badgeValue: 0, color: 'dark' },
+        { title: 'Stats', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 2, badgeValue: 0, color: 'danger' },
+        { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle', badgeValue: 0, color: 'dark' },
         // { title: 'Calendar', component: TabsPage, tabComponent: CalendarPage, index: 2, icon: 'calendar', badgeValue: 0, color: 'danger' },
         // { title: 'Stats', component: TabsPage, tabComponent: StatsPage, index: 2, icon: 'stats' }
     ];
- 
+
     // loggedInPages: PageInterface[] = [
     //     { title: 'Account', component: AccountPage, icon: 'person' },
     //     { title: 'Support', component: SupportPage, icon: 'help' },
@@ -75,45 +77,42 @@ export class SurgiPalApp {
     rootPage: any;
 
     constructor(public events: Events,
-      //  public menu: MenuController,
-       public  platform: Platform,
+        //  public menu: MenuController,
+        public platform: Platform,
         public auth: AuthService,
         public log: LoggerService,
-        public _note: NotifyService,hockeyapp: HockeyApp,
+        public _note: NotifyService, _hockeyapp: HockeyApp,
         public surgerySvc: SurgeryData, public messageSvc: MessageData) {
-
-        this.rootPage =TabsPage;
-
-
-
+this.hockeyapp=_hockeyapp;
+        this.rootPage = TabsPage; 
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             StatusBar.styleDefault();
             Splashscreen.hide();
-  
-      // The Android ID of the app as provided by the HockeyApp portal. Can be null if for iOS only.
-      let androidAppId = '67f7ab86a12c4fa1b48e9a4ba5aec358';
-      // The iOS ID of the app as provided by the HockeyApp portal. Can be null if for android only.
 
-      // Specifies whether you would like crash reports to be automatically sent to the HockeyApp server when the end user restarts the app.
-      let autoSendCrashReports = false;
-      // Specifies whether you would like to display the standard dialog when the app is about to crash. This parameter is only relevant on Android.
-      let ignoreCrashDialog = true;
+            // The Android ID of the app as provided by the HockeyApp portal. Can be null if for iOS only.
+            let androidAppId = '67f7ab86a12c4fa1b48e9a4ba5aec358';
+            // The iOS ID of the app as provided by the HockeyApp portal. Can be null if for android only.
 
-      hockeyapp.start(androidAppId, null, autoSendCrashReports, ignoreCrashDialog);
+            // Specifies whether you would like crash reports to be automatically sent to the HockeyApp server when the end user restarts the app.
+            let autoSendCrashReports = false;
+            // Specifies whether you would like to display the standard dialog when the app is about to crash. This parameter is only relevant on Android.
+            let ignoreCrashDialog = true;
 
-    //   So app doesn't close when hockey app activities close
-    //   This also has a side effect of unable to close the app when on the rootPage and using the back button.
-    //   Back button will perform as normal on other pages and pop to the previous page.
-      platform.registerBackButtonAction(() => {
-          let nav = this.nav; //app.getRootNav();
-        if (nav.canGoBack()) {
-          nav.pop();
-        } else {
-          nav.setRoot(TabsPage);
-        }
-      });
+            _hockeyapp.start(androidAppId, null, autoSendCrashReports, ignoreCrashDialog);
+
+            //   So app doesn't close when hockey app activities close
+            //   This also has a side effect of unable to close the app when on the rootPage and using the back button.
+            //   Back button will perform as normal on other pages and pop to the previous page.
+            platform.registerBackButtonAction(() => {
+                let nav = this.nav; //app.getRootNav();
+                if (nav.canGoBack()) {
+                    nav.pop();
+                } else {
+                    nav.setRoot(TabsPage);
+                }
+            });
 
             this.auth.getRefreshToken()
                 .then((refresh_token) => {
@@ -126,7 +125,7 @@ export class SurgiPalApp {
                         console.log('isAuthenticated in app.component: true');
 
                         // load the conference data  REFACTOR -- INSERT RIVALS QUERY HERE
-       
+
                         this.rootPage = TabsPage;
                         this.enableMenu(true);
                         this.auth.startupTokenRefresh();
@@ -134,7 +133,7 @@ export class SurgiPalApp {
                         this.events.publish('user:authenticated', 'app.component startup');
                         this.listenToLoginEvents();
                         this.getMessageData();
-                   
+
 
                     } else {
                         console.log('isAuthenticated: false');
@@ -162,117 +161,120 @@ export class SurgiPalApp {
                 })
         });
     }
- 
 
-         
-        openPage(page: PageInterface) {
-            // the nav component was found using @ViewChild(Nav)
-            // reset the nav to remove previous pages and only have this page
-            // we wouldn't want the back button to show in this scenario
-            if (page.index) {
-                this.nav.setRoot(page.component, { tabIndex: page.index });
-            } else {
-                this.nav.setRoot(page.component).catch(() => {
-                    console.log("Didn't set nav root");
-                });
-            }
-
-            if (page.logsOut === true) {
-                // Give the menu time to close before changing to logged out
-                setTimeout(() => {
-                    this.auth.logout();
-                }, 1000);
-            }
+    feedback() {
+        this.hockeyapp.feedback();
+    }
+    openPage(page: PageInterface) {
+        // the nav component was found using @ViewChild(Nav)
+        // reset the nav to remove previous pages and only have this page
+        // we wouldn't want the back button to show in this scenario
+        if (page.index) {
+            this.nav.setRoot(page.component, { tabIndex: page.index });
+        } else {
+            this.nav.setRoot(page.component).catch(() => {
+                console.log("Didn't set nav root");
+            });
         }
 
-        listenToLoginEvents() {
-            console.log('LISTENING FOR EVENTS');
-
-            this.events.subscribe('user:loginstorage', (n) => {
-                // this.log.console('event:user:loginstorage', this.auth.user); 
-                // this.log.console('event:fosId:loginstorage',this.auth.user.global_client_id); 
-                this.log.console('event:setAuthenticatedUserContext');
-                this.log.console('user:loginstorage' + n, this.auth.fosId);
-
-                //   this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
-                this.enableMenu(true);
-            });
-
-            this.events.subscribe('user:login', (n) => {
-
-                this.log.console('event:user:login' + n, this.auth.fosId);
-
-                //  this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
-                //            this.log.console('event:setAuthenticatedUserContext');
-
-                this.enableMenu(true);
-            });
-
-            this.events.subscribe('user:signup', () => {
-                this.enableMenu(false);
-            });
-
-            this.events.subscribe('user:logout', () => {
-                this.enableMenu(false);
-            });
-
-            this.events.subscribe('message:metrics', (metrics) => {
-              
-                console.log('MESSAGE METRICS EVENT ', metrics)
-                this.appPages[1].badgeValue = metrics.unread
-                this.messageMetrics = metrics;
-                     this.getSurgeryData();
-            });
-            this.events.subscribe('surgery:metrics', (metrics) => {
-                console.log('SURGERY METRICS EVENT  ', metrics)
-                this.appPages[0].badgeValue = metrics.today;
-             //   this.appPages[2].badgeValue = metrics.pending;
-                this.surgeryMetrics = metrics;
-            });
-
+        if (page.logsOut === true) {
+            // Give the menu time to close before changing to logged out
+            setTimeout(() => {
+                this.auth.logout();
+            }, 1000);
         }
- getMessageData() {
-      console.log('Getting Data In MessageData Background');
-      this.messageSvc.getMetrics().subscribe((data: any) => {
-      },
-          err => {
-              console.log(err);
-          },
-          () => {
-              console.log('MessageData Background completed');
-          });
-  }
-  getSurgeryData() {
+    }
 
-      console.log('Getting Data In SurgeryData Background');
-      this.surgerySvc.getMetrics().subscribe((data: any) => {
-      },
-          err => {
-              console.log(err);
-          },
-          () => {
-              console.log('SurgeryData Background completed');
-          });
+    listenToLoginEvents() {
+        console.log('LISTENING FOR EVENTS');
 
-  }
-       enableMenu(loggedIn: boolean) {
-          //  this.menu.enable(loggedIn, 'loggedInMenu');
+        this.events.subscribe('user:loginstorage', (n) => {
+            // this.log.console('event:user:loginstorage', this.auth.user); 
+            // this.log.console('event:fosId:loginstorage',this.auth.user.global_client_id); 
+            this.log.console('event:setAuthenticatedUserContext');
+            this.log.console('user:loginstorage' + n, this.auth.fosId);
+
+            //   this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
+            this.enableMenu(true);
+        });
+
+        this.events.subscribe('user:login', (n) => {
+
+            this.log.console('event:user:login' + n, this.auth.fosId);
+
+            //  this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
+            //            this.log.console('event:setAuthenticatedUserContext');
+
+            this.enableMenu(true);
+        });
+
+        this.events.subscribe('user:signup', () => {
+            this.enableMenu(false);
+        });
+
+        this.events.subscribe('user:logout', () => {
+            this.enableMenu(false);
+        });
+
+        this.events.subscribe('message:metrics', (metrics) => {
+
+            console.log('MESSAGE METRICS EVENT ', metrics)
+            this.appPages[1].badgeValue = metrics.unread
+            this.messageMetrics = metrics;
+            this.getSurgeryData();
+        });
+        this.events.subscribe('surgery:metrics', (metrics) => {
+            console.log('SURGERY METRICS EVENT  ', metrics)
+            this.appPages[0].badgeValue = metrics.today;
+            //   this.appPages[2].badgeValue = metrics.pending;
+            this.surgeryMetrics = metrics;
+        });
+
+    }
+    getMessageData() {
+        console.log('Getting Data In MessageData Background');
+        this.messageSvc.getMetrics().subscribe((data: any) => {
+        },
+            err => {
+                console.log(err);
+            },
+            () => {
+                console.log('MessageData Background completed');
+            });
+    }
+    getSurgeryData() {
+
+        console.log('Getting Data In SurgeryData Background');
+        this.surgerySvc.getMetrics().subscribe((data: any) => {
+        },
+            err => {
+                console.log(err);
+            },
+            () => {
+                console.log('SurgeryData Background completed');
+            });
+
+    }
+    enableMenu(loggedIn: boolean) {
+        this.menu.enabled=loggedIn;
+        
+        //  enable(loggedIn, 'loggedInMenu');
         //     this.menu.enable(!loggedIn, 'loggedOutMenu');
-        }
+    }
 
-        isActive(page: PageInterface) {
-            let childNav = this.nav.getActiveChildNav();
-            // Tabs are a special case because they have their own navigation
-            if (childNav) {
-                if (childNav.getSelected() && childNav.getSelected().root === page.tabComponent) {
-                    return 'secondary';
-                }
-                return 'primary';
-            }
-
-            if (this.nav.getActive() && this.nav.getActive().component === page.component) {
+    isActive(page: PageInterface) {
+        let childNav = this.nav.getActiveChildNav();
+        // Tabs are a special case because they have their own navigation
+        if (childNav) {
+            if (childNav.getSelected() && childNav.getSelected().root === page.tabComponent) {
                 return 'secondary';
             }
             return 'primary';
         }
+
+        if (this.nav.getActive() && this.nav.getActive().component === page.component) {
+            return 'secondary';
+        }
+        return 'primary';
     }
+}
