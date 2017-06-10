@@ -1,3 +1,4 @@
+import { CalendarPage } from './../calendar/calendar';
 import { PageInterface } from '../../app/app.component';
 
 import { Component } from '@angular/core';
@@ -9,6 +10,7 @@ import { ContactPage } from '../contact/contact';
 import { AccountPage } from "../account/account";
 import { PulsePage, SurgeryData } from "../pulse/index";
 import { MessageListPage, MessageData, MessageService } from "../message/index";
+import { FuturePulsePage } from "../future/index";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -22,14 +24,15 @@ export class TabsPage {
   // should be each tab's root Page
   loading: any;
   tab1Root: any = PulsePage;
-  tab2Root: any = MessageListPage;
-  tab3Root: any = AccountPage; 
-  tab4Root: any = AboutPage;
-
-
+  tab2Root: any = FuturePulsePage;
+  tab3Root: any = MessageListPage;
+  tab4Root: any = AccountPage; 
+  tab5Root: any = AboutPage;
+ 
   pulseData: number = 0;
   messageData: number = 0;
   accountData: number = 0;
+  futureData: number = 0;
   mySelectedIndex: number;
   isAndroid: boolean = false;
   constructor(navParams: NavParams, platform: Platform, public events: Events, public surgerySvc: SurgeryData, public messageSvc: MessageData) {
@@ -38,9 +41,9 @@ export class TabsPage {
 
   }
   ionViewDidLoad() {
-    this.loadListeners();
-
+    this.loadListeners(); 
   }
+
   loadListeners() {
     // this.events.subscribe('surgery:metrics', (metrics) => {
     //   // user and time are the same arguments passed in `events.publish(user, time)`
@@ -52,16 +55,14 @@ export class TabsPage {
     //   console.log('MESSAGE METRICS EVENT222 ', metrics)
     //   this.messageData = metrics.unread
     // });
-    this.events.subscribe('message:metrics', (metrics) => {
-
+    this.events.subscribe('message:metrics', (metrics) => { 
       console.log('MESSAGE METRICS EVENT ', metrics)
-      this.messageData = metrics.unread
-
-
+      this.messageData = metrics.unread 
     });
     this.events.subscribe('surgery:metrics', (metrics) => {
       console.log('SURGERY METRICS EVENT  ', metrics)
       this.pulseData = metrics.today;
+      this.futureData = metrics.pending;
       //  this.appPages[0].badgeValue = metrics.today;
       //this.appPages[2].badgeValue = metrics.pending;
 

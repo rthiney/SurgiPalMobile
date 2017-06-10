@@ -2,13 +2,17 @@
     <ion-tab [tabBadge]="pulseData" [root]="tab1Root"
          tabIcon="pulse"
          tabTitle="Today"></ion-tab> 
-         <ion-tab [tabBadge]="messageData" [root]="tab2Root"
+ 
+    <ion-tab [tabBadge]="futureData" [root]="tab2Root"
+         tabIcon="calendar"
+         tabTitle="Calendar"></ion-tab> 
+         <ion-tab [tabBadge]="messageData" [root]="tab3Root"
          tabIcon="mail"
          tabTitle="Messages"></ion-tab> 
-<ion-tab [tabBadge]="accountData"  [root]="tab3Root"
+<ion-tab [tabBadge]="accountData"  [root]="tab4Root"
          tabIcon="stats"
          tabTitle="Stats"></ion-tab>  
-<ion-tab  [root]="tab4Root"
+<ion-tab  [root]="tab5Root"
          tabIcon="information-circle"
          tabTitle="About"></ion-tab>
          </ion-tabs>

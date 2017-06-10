@@ -10,7 +10,7 @@ import { Pulse } from './../../models/pulse';
 import { AuthService, NotifyService, LoggerService, CONFIGURATION } from "../../shared/index";
 
 @Component({
-  selector: 'page-schedule',
+  selector: 'page-pulse',
   templateUrl: 'pulse.html'
 })
 export class PulsePage {
@@ -63,32 +63,38 @@ export class PulsePage {
       this.note.presentToast('Success', data.statusCode);
     });
   }
-    
-  
-  // backDate() { 
-  //   this.dateIndex++;
-  //   this.date.setDate(this.date.getDate() + this.dateIndex);
-  // }
-  // forwardDate() {
-  //   this.dateIndex--;
-  //   this.date.setDate(this.date.getDate() + this.dateIndex);
-  // }
 
 
-  updateSchedule(reset: boolean = false) {
+  backDate() {
+    this.dateIndex--;
+    this.date.setDate(this.date.getDate() + this.dateIndex);
+    console.log('Date Search', this.date);
+    console.log('Date Index', this.dateIndex);
+    this.updateSchedule(this.date, true);
+  }
+  forwardDate() {
+    this.dateIndex++;
+    this.date.setDate(this.date.getDate() + this.dateIndex);
+    console.log('Date Search', this.date);
+    console.log('Date Index', this.dateIndex);
+    this.updateSchedule(this.date, true);
+  }
 
-    let cntl = this.note.presentLoading('Loading Todays Pulse...');
+
+  updateSchedule(d: Date = null, reset: boolean = false) {
+
+    let cntl = this.note.presentLoading('Loading Todays Pulse for ' + d.toLocaleDateString());
     // Close any open sliding items when the schedule updates
     this.surgeryList && this.surgeryList.closeSlidingItems();
 
-    this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment, reset).subscribe((data: any) => {
+    this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment, d, reset).subscribe((data: any) => {
       this.events.publish('pulse:filtered', data.shownSurgeries);
       console.log('getSurgeries', data);
       this.shownSurgeries = data.shownSurgeries;
       this.groups = data;
 
       //      console.log('Grouped After Filter Data:',data);
-    /// this.groupedSurgeries =data.filter(w =>w.hide==false); //data.groupedSurgeries;
+      /// this.groupedSurgeries =data.filter(w =>w.hide==false); //data.groupedSurgeries;
       // console.log('Grouped After Filter:', data.filter(w =>w.hide==false));
       console.log('      this.shownSurgeries', this.shownSurgeries)
       console.log('      this.groups', this.groups)

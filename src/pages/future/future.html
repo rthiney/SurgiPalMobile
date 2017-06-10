@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-   <ion-title>Today's Pulse for {{ date  | date:'shortDate'}}</ion-title>
+   <ion-title>A look ahead...</ion-title>
         <!--<ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
             <ion-segment-button value="not">
                 Not Completed
@@ -35,12 +35,29 @@
     <ion-refresher (ionRefresh)="doRefresh($event)">
         <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
         </ion-refresher-content>
-    </ion-refresher> 
+    </ion-refresher>
+
+ <!--<ion-item-group *ngFor="let group of groupedSurgeries">
+ 
+      <ion-item-divider light>{{group.d}}</ion-item-divider>
+      <ion-item *ngFor="let s of group.surgeries">{{s.patient}}
+
+
+
+      </ion-item>
+ 
+    </ion-item-group>
+ -->
 
  <ion-list #surgeryList [hidden]="shownSurgeries === 0">
 
     <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
- 
+
+      <!--<ion-item-divider sticky>
+        <ion-label>
+          {{group.d}}
+        </ion-label>
+      </ion-item-divider>-->
 
 
 
@@ -54,7 +71,17 @@
   <img src="assets/img/rooms/s{{i+1}}.PNG"/>
     <div class="card-title">{{s.surgery.initials | uppercase}}</div>
     <div class="card-subtitle">{{s.surgery.patient}}</div>
- 
+
+   
+                        <!--<ion-item   (click)="loadDetail(s.surgery)"  [attr.class]="s.surgery.completed ? 'isRead1' : 'isRead0'">
+                             
+                              
+                                  <ion-avatar item-left> 
+                                      <img [src]="s.surgery.doctorImage" />
+            </ion-avatar>
+                             <h2>{{s.surgery.patient}}</h2>
+        <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
+                            </ion-item>-->
                       
    <ion-item  (click)="loadDetail(s.surgery)">
     <ion-avatar item-left>
@@ -62,7 +89,7 @@
     </ion-avatar>
            <h2>{{s.surgery.initials}}</h2>
        <h2>{{s.surgery.patient}}</h2>
-             <p>  Status: {{s.surgery.admissionStatus }}</p>
+           <p>  Status: {{s.surgery.admissionStatus }}</p>
     <p>  Duration: {{s.surgery.surgeryTime}}</p>
             <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
             
@@ -73,7 +100,7 @@
 
 
  
-    <button ion-item   (click)="showEditCodes(s,'CPT')">
+    <!--<button ion-item   (click)="showEditCodes(s,'CPT')">
     <ion-icon name="barcode" item-left small></ion-icon>
     <h2>CPT Codes</h2>
     <p>{{s.surgery.cpt}}</p>
@@ -87,14 +114,14 @@
 
     <button ion-item small color="favorite"   (click)="sendBilling(s)">
     <ion-icon name="cash" item-left small></ion-icon>
-    <h2>Bill</h2>
-    <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
+    <h2>Review</h2>
+    <p>Review Preference Cards </p>
   </button>
       <button ion-item color="danger"  (click)="cancelSurgery(s.surgery,slidingItem)">
     <ion-icon name="close-circle" item-left small></ion-icon>
     <h2>Cancel</h2>
     <p>Cancel surgery and remove from this list!</p>
-  </button>
+  </button>-->
   
    
      </ion-list>

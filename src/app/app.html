@@ -37,13 +37,13 @@
           <ion-list-header>
               Account
           </ion-list-header>
-          <button ion-item menuClose  (click)="auth.logout()" *ngIf="auth.authenticated()">
+          <button ion-item menuClose  (click)="logout()" *ngIf="auth.authenticated()">
               <ion-icon item-left  name ="log-out"></ion-icon>
              Logout
           </button>
           <button ion-item menuClose (click)="auth.login()" *ngIf="!auth.authenticated()">
               <ion-icon item-left name="log-in"></ion-icon>
-              Logout
+              Login
           </button>
 
  

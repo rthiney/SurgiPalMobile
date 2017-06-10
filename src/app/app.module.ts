@@ -1,3 +1,4 @@
+import { CalendarPage } from './../pages/calendar/calendar';
 import { MessageService } from './../pages/message/message.service';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from "@angular/platform-browser";
@@ -24,7 +25,8 @@ import { PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails, SurgeryData 
 import { MessageListPage, MessageReplyModal, MessageData, MessageDetailPage } from "../pages/message/index";
 import { AuthService, NotifyService, LoggerService } from "../shared/index";
 import { HockeyApp } from 'ionic-hockeyapp';
-
+import { FuturePulsePage } from "../pages/future/index";
+//TEST
 
  
 
@@ -69,9 +71,12 @@ export function debounce(func, wait, immediate) {
         AccountPage,
         SupportPage,
         HomePage,
+ 
         PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails,
         MessageListPage, MessageDetailPage, MessageReplyModal,
-        TabsPage
+        CalendarPage,
+        TabsPage,
+FuturePulsePage
     ],
     imports: [AppInsightsModule,
         BrowserModule, HttpModule, MomentModule,
@@ -87,7 +92,9 @@ export function debounce(func, wait, immediate) {
         HomePage,
         PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails,
         MessageListPage, MessageDetailPage, MessageReplyModal,
-        TabsPage
+        CalendarPage,
+        TabsPage,
+        FuturePulsePage
     ],
     providers: [
         AuthService,
@@ -96,8 +103,8 @@ export function debounce(func, wait, immediate) {
             useFactory: getAuthHttp,
             deps: [Http]
         },
-      //  { provide: ErrorHandler, useClass: IonicErrorHandler },
-        { provide: ErrorHandler, useClass: AppInsightsErrorHandler },
+      { provide: ErrorHandler, useClass: IonicErrorHandler },
+      //  { provide: ErrorHandler, useClass: AppInsightsErrorHandler },
             HockeyApp,
         NotifyService,
         SurgeryData,

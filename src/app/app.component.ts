@@ -6,7 +6,8 @@ import { Component, ViewChild } from '@angular/core';
 import { SurgeryMetrics, MessageMetrics } from './../models/metrics';
 import { MessageData, MessageListPage } from './../pages/message/index';
 import { SurgeryData, PulsePage } from './../pages/pulse/index';
-;
+import { FuturePulsePage, FutureData } from './../pages/future/index';
+
 import { AzureMobile } from './../shared/app.constants';
 
 import { Events, MenuController, Nav, Platform, App, Menu, NavController } from 'ionic-angular';
@@ -30,7 +31,7 @@ export interface PageInterface {
     tabComponent?: any;
     badgeValue?: number;
     color?: string;
-    tabRoot? :string;
+    tabRoot?: string;
 }
 
 @Component({
@@ -54,11 +55,12 @@ export class SurgiPalApp {
     // the login page disables the left menu
     appPages: PageInterface[] = [
 
-        { title: 'Today', component: TabsPage, tabComponent: PulsePage, icon: 'pulse', index: 0, badgeValue: 0, color: 'favorite' },
-        { title: 'Messages', component: TabsPage, tabComponent: MessageListPage, index: 1, icon: 'mail', badgeValue: 0, color: 'dark' },
-        { title: 'Stats', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 2, badgeValue: 0, color: 'danger' },
-        { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 3, icon: 'information-circle', badgeValue: 0, color: 'dark' },
-        // { title: 'Calendar', component: TabsPage, tabComponent: CalendarPage, index: 2, icon: 'calendar', badgeValue: 0, color: 'danger' },
+        { title: 'Today', component: TabsPage, tabComponent: PulsePage, icon: 'pulse', index: 0, badgeValue: 0, color: 'dark' },
+        { title: 'Calendar', component: TabsPage, tabComponent: FuturePulsePage, index: 1, icon: 'calendar', badgeValue: 0, color: 'dark' },
+
+        { title: 'Messages', component: TabsPage, tabComponent: MessageListPage, index: 2, icon: 'mail', badgeValue: 0, color: 'dark' },
+        { title: 'Stats', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 3, badgeValue: 0, color: 'dark' },
+        { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 4, icon: 'information-circle', badgeValue: 0, color: 'dark' }
         // { title: 'Stats', component: TabsPage, tabComponent: StatsPage, index: 2, icon: 'stats' }
     ];
 
@@ -83,8 +85,8 @@ export class SurgiPalApp {
         public log: LoggerService,
         public _note: NotifyService, _hockeyapp: HockeyApp,
         public surgerySvc: SurgeryData, public messageSvc: MessageData) {
-this.hockeyapp=_hockeyapp;
-        this.rootPage = TabsPage; 
+        this.hockeyapp = _hockeyapp;
+        this.rootPage = AccountPage;
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -110,7 +112,7 @@ this.hockeyapp=_hockeyapp;
                 if (nav.canGoBack()) {
                     nav.pop();
                 } else {
-                    nav.setRoot(TabsPage);
+                    nav.setRoot(AccountPage);
                 }
             });
 
@@ -126,7 +128,7 @@ this.hockeyapp=_hockeyapp;
 
                         // load the conference data  REFACTOR -- INSERT RIVALS QUERY HERE
 
-                        this.rootPage = TabsPage;
+                        this.rootPage = AccountPage;
                         this.enableMenu(true);
                         this.auth.startupTokenRefresh();
                         // this.auth.authWithRivals();  // now handled in event handler
@@ -219,14 +221,14 @@ this.hockeyapp=_hockeyapp;
         this.events.subscribe('message:metrics', (metrics) => {
 
             console.log('MESSAGE METRICS EVENT ', metrics)
-            this.appPages[1].badgeValue = metrics.unread
+            this.appPages[2].badgeValue = metrics.unread
             this.messageMetrics = metrics;
             this.getSurgeryData();
         });
         this.events.subscribe('surgery:metrics', (metrics) => {
             console.log('SURGERY METRICS EVENT  ', metrics)
             this.appPages[0].badgeValue = metrics.today;
-            //   this.appPages[2].badgeValue = metrics.pending;
+            this.appPages[1].badgeValue = metrics.pending;
             this.surgeryMetrics = metrics;
         });
 
@@ -256,12 +258,15 @@ this.hockeyapp=_hockeyapp;
 
     }
     enableMenu(loggedIn: boolean) {
-        this.menu.enabled=loggedIn;
-        
+        this.menu.enabled = loggedIn;
+
         //  enable(loggedIn, 'loggedInMenu');
         //     this.menu.enable(!loggedIn, 'loggedOutMenu');
     }
-
+    logout() {
+        this.menu.enabled = false;
+        this.auth.logout();
+    }
     isActive(page: PageInterface) {
         let childNav = this.nav.getActiveChildNav();
         // Tabs are a special case because they have their own navigation
