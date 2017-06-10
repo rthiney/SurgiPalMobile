@@ -1,8 +1,8 @@
- 
+
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Headers } from '@angular/http';
 import { AlertController, App, FabContainer, ItemSliding, List, ModalController, NavController, LoadingController, Events } from 'ionic-angular';
-import {  FutureData, SurgeryDetailPage } from './index';
+import { FutureData, FutureDetailPage } from './index';
 import { PulseViewModel } from './../../models/viewmodels/pulse_model';
 import { AuthHttp } from 'angular2-jwt';
 import { Pulse } from './../../models/pulse';
@@ -13,7 +13,7 @@ import { AuthService, NotifyService, LoggerService, CONFIGURATION } from "../../
   selector: 'page-future',
   templateUrl: 'future.html'
 })
-export class FuturePulsePage { 
+export class FuturePulsePage {
   @ViewChild('surgeryList', { read: List }) surgeryList: List;
   _events: Events;
   selectedPulse: any;
@@ -36,7 +36,7 @@ export class FuturePulsePage {
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public auth: AuthService,
-    public surgeryData: FutureData,
+    public futureData: FutureData,
     public note: NotifyService,
     public log: LoggerService,
     public events: Events
@@ -50,21 +50,15 @@ export class FuturePulsePage {
     this.app.setTitle('Calendar');
     console.log('FOSID', this.auth.fosId);
     if (this.auth.fosId !== undefined)
-      this.updateSchedule(null,true);
-    this.loadWatchers();
-  }
-  loadWatchers() {
-    this.events.subscribe('email:billing', (data) => { 
-      this.note.presentToast('Success', data.statusCode);
-    });
+      this.updateSchedule(null, true);
+ 
   }
  
-    loadDetail(s: PulseViewModel) {
+  loadDetail(s: PulseViewModel) {
     // go to the session detail page
     // and pass in the session data 
     this.navCtrl.push(FutureDetailPage, s);
   }
- 
 
   backDate() {
     this.dateIndex--;
@@ -81,20 +75,18 @@ export class FuturePulsePage {
     this.updateSchedule(this.date, true);
   }
 
-
-  updateSchedule(d: Date = null, reset: boolean = false) { 
-    let cntl = this.note.presentLoading('Loading Future Pulse for ' + d.toLocaleDateString());
+  updateSchedule(d: Date = null, reset: boolean = false) {
+    let cntl = this.note.presentLoading('Loading Future Pulse');
     // Close any open sliding items when the schedule updates
-    this.surgeryList && this.surgeryList.closeSlidingItems(); 
-    this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment, d, reset).subscribe((data: any) => {
+    this.surgeryList && this.surgeryList.closeSlidingItems();
+    this.futureData.getSurgeries(this.queryText, this.excludeTracks, this.segment, d, reset).subscribe((data: any) => {
       this.shownSurgeries = data.shownSurgeries;
-      this.groups = data;  
- 
+      this.groups = data;
+
     });
     cntl.dismiss();
- 
+
   }
- 
 
   doRefresh(refresher) {
     this.updateSchedule();
@@ -112,15 +104,10 @@ export class FuturePulsePage {
     return Promise.reject(error.message || error);
   }
 
- 
   showDetail(s: PulseViewModel) {
     // go to the session detail page
     // and pass in the session data 
-    this.navCtrl.push(SurgeryDetailPage, s);
+    this.navCtrl.push(FutureDetailPage, s);
   }
 
- 
- 
-  }
-
-  
+}

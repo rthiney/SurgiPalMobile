@@ -8,7 +8,6 @@ import { Injectable } from '@angular/core';
 
 import { Http } from '@angular/http';
 
-
 import { Observable } from 'rxjs/Observable';
 
 import { AuthService, CONFIGURATION } from "../../shared/index";
@@ -38,8 +37,11 @@ export class FutureData {
       var day = d.getUTCDate();
       var year = d.getUTCFullYear()+10;
       //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
-      var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
-
+      //var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
+      var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/0/0/' + year;
+// var url = 'http://surgipal.com/api/api.php/surgeriesview/?transform=1&include=specialty&filter=doctorFosId,eq,' + this.auth.fosId + '&filter=term,sw,2017-10'
+   //   var url = 'http://surgipal.com/api/api.php/surgeriesview/?transform=1&filter[]=doctorFosId,eq,' + this.auth.fosId + '&filter[]=term,sw,' + d.getUTCFullYear() + '&filter[]=completed,is,null&satisfy=all';
+      
       //  var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12';
       //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/today/12';
       // var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12/6/1/2017';
@@ -74,8 +76,6 @@ export class FutureData {
         currentDate = d.toLocaleDateString();
         ///   this.data.dates.push(currentDate);
 
-
-
         let newGroup = {
           d: currentDate,
           surgeries: [],
@@ -103,13 +103,11 @@ export class FutureData {
       else
         this.data.surgeriesNotCompleted.push(newSurgery);
 
-
       if (surgery.preferenceCardName) {
         if (this.metrics.cards.indexOf(surgery.preferenceCardName.trim()) < 0) {
           this.metrics.cards.push(surgery.preferenceCardName.trim());
         }
       }
-
 
       if (surgery.speciality) {
         if (this.metrics.speciality.indexOf(surgery.speciality.trim()) < 0) {
@@ -117,13 +115,11 @@ export class FutureData {
         }
       }
 
-
       if (surgery.admissionStatus) {
         if (this.metrics.admissionStatus.indexOf(surgery.admissionStatus.trim()) < 0) {
           this.metrics.admissionStatus.push(surgery.admissionStatus.trim());
         }
       }
-
 
       if (surgery.patient) {
         if (this.metrics.surgeryType.indexOf(surgery.patient.trim()) < 0) {
@@ -131,7 +127,6 @@ export class FutureData {
         }
 
       }
-
 
       if (surgery.cpt) {
         let qt = surgery.cpt.split(',').filter(w => !!w.trim().length);
@@ -165,7 +160,6 @@ export class FutureData {
 
       return acc;
     }, {});
-
 
     var uniqueDiag = this.metrics.diagnosisCodes.reduce(function (acc, curr) {
       if (typeof acc[curr] == 'undefined') {
@@ -229,8 +223,6 @@ export class FutureData {
 
     });
 
-
-
     // res.forEach((srg: any) => {
     //   srg.hide = true;
     //   console.log('getSurgeries:day:srg', srg)
@@ -241,8 +233,6 @@ export class FutureData {
     //     srg.hide = false;
     //   }
     // });
-
-
 
     //   day.shownSessions = 0;
     //   queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
@@ -289,10 +279,6 @@ export class FutureData {
   //       }
   //     });
   // }
-
-
-
-
 
   //     let day = data.schedule[dayIndex];
   //     day.shownSessions = 0;
@@ -354,10 +340,6 @@ export class FutureData {
     }
     if (queryWords.length && matchesQueryText)
       console.log('MATCHED', matchesQueryText);
-
-
-
-
 
     // if any of the sessions tracks are not in the
     // exclude tracks then this session passes the track test

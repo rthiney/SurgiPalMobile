@@ -11,7 +11,6 @@ import { Storage } from '@ionic/storage';
 import { MomentModule } from 'angular2-moment';
 import { AppInsightsModule, AppInsightsErrorHandler } from 'ng2-appinsights';
 
-
 //General Components
 import { SurgiPalApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
@@ -25,10 +24,8 @@ import { PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails, SurgeryData 
 import { MessageListPage, MessageReplyModal, MessageData, MessageDetailPage } from "../pages/message/index";
 import { AuthService, NotifyService, LoggerService } from "../shared/index";
 import { HockeyApp } from 'ionic-hockeyapp';
-import { FuturePulsePage } from "../pages/future/index";
-//TEST
-
- 
+import { FutureData, FuturePulsePage } from "../pages/future/index";
+//TEST, FutureData
 
 let storage = new Storage();
 
@@ -109,10 +106,10 @@ FuturePulsePage
         NotifyService,
         SurgeryData,
         MessageData,
+        FutureData,
         LoggerService,
         MessageService
         
-
     ]
 })
 export class AppModule { }
