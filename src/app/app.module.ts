@@ -29,6 +29,7 @@ import { AddSurgeryComponent } from "../pages/add-surgery/add-surgery.component"
  import { IonicNativePlugin } from '@ionic-native/core'
 import { CallNumber } from '@ionic-native/call-number';
 import { EmailComposer } from '@ionic-native/email-composer';
+import { LoginPage } from "../pages/login/login";
 let storage = new Storage();
 
 export function getAuthHttp(http) {
@@ -65,7 +66,8 @@ export function debounce(func, wait, immediate) {
         MessageListPage, MessageDetailPage, MessageReplyModal,
         CalendarPage,
         TabsPage ,
-        AddSurgeryComponent 
+        AddSurgeryComponent ,
+        LoginPage
     ],
     imports: [AppInsightsModule ,
         BrowserModule, HttpModule, MomentModule,
@@ -83,7 +85,8 @@ export function debounce(func, wait, immediate) {
         MessageListPage, MessageDetailPage, MessageReplyModal,
         CalendarPage,
         TabsPage ,
-        AddSurgeryComponent 
+        AddSurgeryComponent ,
+        LoginPage
     ],
     providers: [
         AuthService,

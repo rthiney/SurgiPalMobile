@@ -49,13 +49,21 @@
 
             <ion-item-group *ngFor="let group of groups" [hidden]="group.surgeries==0">
 
-                <ion-item-divider sticky>
-                    <ion-label>
-                        {{group.d}}
-                    </ion-label>
-                </ion-item-divider>
+         
+            <ion-item-divider sticky color="light" *ngIf="group.surgeries.length>0" >
+                <ion-label>
+                    {{group.d}}
+                </ion-label>
 
-                <ion-card *ngFor="let s of group.surgeries;   let i = index;" #slidingItem [attr.track]="s.surgery.admissionStatus | lowercase" [hidden]="s.surgery.hide">
+                <ion-note item-right text-right> 
+          {{group.surgeries.length}}  Surgeries
+      </ion-note>
+            </ion-item-divider>
+
+
+
+
+                <ion-card  *ngFor="let s of group.surgeries;   let i = index;" #slidingItem [attr.track]="s.surgery.admissionStatus | lowercase" [hidden]="s.surgery.hide">
 
                     <ion-item (click)="loadDetail(s.surgery)">
                         <ion-avatar item-left>
@@ -70,31 +78,39 @@
                     <ion-card-content>
 
                         <ion-list>
-
-
-
-                            <button ion-item (click)="showEditCodes(s,'CPT')">
-    <ion-icon name="barcode" item-left small></ion-icon>
+ <ion-item-divider color="light" small>Actions</ion-item-divider>
+                        <button ion-item (click)="showEditCodes(s,'CPT')">
+    <ion-icon name="barcode" item-left large color="primary"></ion-icon>
     <h2>CPT Codes</h2>
     <p>{{s.surgery.cpt}}</p>
+     <ion-note item-right>{{s.cptArray.length}} codes</ion-note>
   </button>
 
-                            <button ion-item (click)="showEditCodes(s,'DX')">
-    <ion-icon name="barcode" item-left small></ion-icon>
+                        <button ion-item (click)="showEditCodes(s,'DX')">
+    <ion-icon name="barcode" item-left  large color="primary"></ion-icon>
     <h2>DX Codes</h2>
     <p>{{s.surgery.diagnosisCode}}</p>
+ <ion-note item-right>{{s.dxArray.length}} codes</ion-note>
   </button>
+                           
+                           
 
-                            <button ion-item small color="favorite" (click)="sendBilling(s)">
-    <ion-icon name="cash" item-left small></ion-icon>
-    <h2>Bill</h2>
-    <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
-  </button>
-                            <button ion-item color="danger" (click)="cancelSurgery(s.surgery,slidingItem)">
-    <ion-icon name="close-circle" item-left small></ion-icon>
-    <h2>Cancel</h2>
-    <p>Cancel surgery and remove from this list!</p>
-  </button>
+                        <!--CANCEL BUTTON-->
+                        <ion-item-sliding>
+                            <button ion-item clear item-left (click)="cancelSurgery(s,cardItem)"> <ion-icon name="close-circle" item-left small color="danger"></ion-icon>
+                                <h2>Cancel</h2>
+                                <p>Cancel surgery and remove from this list!</p>
+                                <ion-note item-right>{{s.surgery.coordinatorName}}  </ion-note> <ion-icon name="more" item-right small color="facebook"></ion-icon>
+                        </button>
+                            <ion-item-options side="right">
+                                <button ion-button color="primary" (click)="callComposeEmail(s.surgery.coordinatorEmail)">
+                                     <ion-icon name="mail"></ion-icon> 
+                                   </button>
+                                <button ion-button color="primary" (click)="callPhoneNumber(s.surgery.coordinatorPhone)">
+                                     <ion-icon name="call"></ion-icon> 
+                                   </button>
+                            </ion-item-options>
+                        </ion-item-sliding>
                         </ion-list>
                     </ion-card-content>
                 </ion-card>
@@ -124,10 +140,15 @@
                             </ion-avatar>
 
                             <h1> {{s.surgery.initials | uppercase }} </h1>
-                            <h2><strong>Surgery:</strong><i> {{s.surgery.patient}}</i></h2>
-                            <h2><strong>Status:</strong><i>: {{s.surgery.admissionStatus}}</i></h2>
-                            <ion-note item-right><i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} <br><strong> Duration</strong>: {{s.surgery.surgeryTime}} </i></ion-note>
 
+
+
+ <h2>{{s.surgery.initials}}</h2>
+                        <h2>{{s.surgery.patient}}</h2>
+                          <p> Status: {{s.surgery.admissionStatus}}</p>
+                        <p> Duration: {{s.surgery.surgeryTime}}</p>
+                        <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
+ 
                         </ion-item>
 
                         <ion-item-options side="left">
@@ -159,14 +180,14 @@
                     <ion-list>
                         <ion-item-divider color="light" small>Actions</ion-item-divider>
                         <button ion-item (click)="showEditCodes(s,'CPT')">
-    <ion-icon name="barcode" item-left large color="primary"></ion-icon>
+    <ion-icon name="barcode" item-left small color="primary"></ion-icon>
     <h2>CPT Codes</h2>
     <p>{{s.surgery.cpt}}</p>
      <ion-note item-right>{{s.cptArray.length}} codes</ion-note>
   </button>
 
                         <button ion-item (click)="showEditCodes(s,'DX')">
-    <ion-icon name="barcode" item-left  large color="primary"></ion-icon>
+    <ion-icon name="barcode" item-left  small color="facebook"></ion-icon>
     <h2>DX Codes</h2>
     <p>{{s.surgery.diagnosisCode}}</p>
  <ion-note item-right>{{s.dxArray.length}} codes</ion-note>
@@ -176,10 +197,10 @@
 
                         <!--BILLING BUTTON-->
                         <ion-item-sliding>
-                            <button ion-item clear item-left (click)="sendBilling(s)"> <ion-icon name="cash" item-left large color="favorite"></ion-icon>
+                            <button ion-item clear item-left (click)="sendBilling(s)"> <ion-icon name="cash" item-left small color="favorite"></ion-icon>
                                <h2>Billing</h2>
                                <p>Send billing information to coordinator</p>
-                                <ion-note item-right>Contact {{s.surgery.billingCoordinatorName}}</ion-note> <ion-icon name="more" item-right large color="facebook"></ion-icon>
+                                <ion-note item-right>{{s.surgery.billingCoordinatorName}}</ion-note> <ion-icon name="more" item-right small color="facebook"></ion-icon>
                         </button>
                             <ion-item-options side="right">
                                 <button ion-button color="primary" (click)="callComposeEmail(s.surgery.billingCoordinatorEmail,s.surgery)">
@@ -200,10 +221,10 @@
 
                         <!--CANCEL BUTTON-->
                         <ion-item-sliding>
-                            <button ion-item clear item-left (click)="cancelSurgery(s,cardItem)"> <ion-icon name="close-circle" item-left large color="danger"></ion-icon>
+                            <button ion-item clear item-left (click)="cancelSurgery(s,cardItem)"> <ion-icon name="close-circle" item-left small color="danger"></ion-icon>
                                 <h2>Cancel</h2>
                                 <p>Cancel surgery and remove from this list!</p>
-                                <ion-note item-right>Contact {{s.surgery.coordinatorName}}  </ion-note> <ion-icon name="more" item-right large color="facebook"></ion-icon>
+                                <ion-note item-right>{{s.surgery.coordinatorName}}  </ion-note> <ion-icon name="more" item-right small color="facebook"></ion-icon>
                         </button>
                             <ion-item-options side="right">
                                 <button ion-button color="primary" (click)="callComposeEmail(s.surgery.coordinatorEmail)">
@@ -247,10 +268,12 @@
                     <ion-avatar item-left>
                         <img [src]="s.surgery.doctorImage" />
                     </ion-avatar>
-                    <h2><strong>Patient:</strong><i>{{s.surgery.initials}}</i></h2>
-                    <h2><strong>Surgery:</strong><i> {{s.surgery.patient}}</i></h2>
-                    <h2><strong>Status:</strong><i>: {{s.surgery.admissionStatus}}</i></h2>
-                    <ion-note item-right><i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} <br><strong> Duration</strong>: {{s.surgery.surgeryTime}} </i></ion-note>
+                    <h2><strong>Patient:</strong> <i>{{s.surgery.initials}}</i></h2>
+                    <h2><strong>Surgery:</strong> <i> {{s.surgery.patient}}</i></h2>
+                    <h2><strong>Status:</strong> <i> {{s.surgery.admissionStatus}}</i></h2>
+                        <h2><strong>Duration:</strong> <i> {{s.surgery.surgeryTime}}</i></h2>
+                            <h2><strong>Complete:</strong> :<i> {{s.surgery.completed}}</i></h2>
+                    <ion-note item-right><i> {{s.surgery.term | date:'shortDate'}}<br> {{s.surgery.term | date:'shortTime'}}  </i> </ion-note>
                 </ion-item>
 
             </ion-card>

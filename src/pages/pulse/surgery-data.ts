@@ -70,7 +70,6 @@ export class SurgeryData {
 
         let newSurgery =new SurgeryGroupItem(surgery);
       
-
         if (d.toLocaleDateString() != currentDate) {  ///group by date
           currentDate = d.toLocaleDateString();
 
@@ -79,7 +78,6 @@ export class SurgeryData {
           currentSurgeries = newGroup.surgeries;
           this.groupedSurgeries.push(newGroup);
         }
-
 
         if (d.toLocaleDateString() === today.toLocaleDateString())
           this.data.todaySurgeries.push(newSurgery);
@@ -90,14 +88,10 @@ export class SurgeryData {
         else
           this.data.pastSurgeries.push(newSurgery);
 
-
-
-
-        if (surgery.completed !== null && surgery.completed)
-          this.data.surgeriesCompleted.push(newSurgery);
-        else
-          this.data.surgeriesNotCompleted.push(newSurgery);
-
+        // if (surgery.completed !== null && surgery.completed)
+        //   this.data.surgeriesCompleted.push(newSurgery);
+        // else
+        //   this.data.surgeriesNotCompleted.push(newSurgery);
 
         if (surgery.preferenceCardName) {
           if (this.metrics.cards.indexOf(surgery.preferenceCardName.trim()) < 0) {
@@ -148,22 +142,15 @@ export class SurgeryData {
       return a.realDate.getDate() - b.realDate.getDate();
     });
 
-    console.group('sort today');
     this.data.todaySurgeries = this.data.todaySurgeries.sort((a: any, b: any) => {
-      console.log('Term', a.surgery.term);
+ 
       return new Date(b.surgery.term).getDate() - new Date(a.surgery.term).getDate();
     }); 
-    console.groupEnd();
-
-
-
-    console.group('sort past');
+ 
     this.data.pastSurgeries = this.data.pastSurgeries.sort((a: any, b: any) => {
-      console.log('Term', a.surgery.term);
+      
       return new Date(b.surgery.term).getDate() - new Date(a.surgery.term).getDate();
     }); 
-    console.groupEnd();
-
  
     var uniqueCpt = this.metrics.cptCodes.reduce(function (acc, curr) {
       if (typeof acc[curr] == 'undefined') {
@@ -184,7 +171,6 @@ export class SurgeryData {
       return acc;
     }, {});
 
-
     this.metrics.uniqueDiag = uniqueDiag;
     this.metrics.uniqueCpt = uniqueCpt
     this.metrics.diagnosisCodes = this.metrics.diagnosisCodes.filter(function (item, i, ar) { return ar.indexOf(item) === i; });
@@ -202,7 +188,6 @@ export class SurgeryData {
   getTime(date?: Date) {
     return date != null ? date.getTime() : 0;
   }
-
 
   sortByDueDate(): void {
     this.data.sort((a: any, b: any) => {
@@ -346,8 +331,6 @@ export class SurgeryData {
     //  console.log('Filter Returns', !(matchesQueryText && matchesSegment));
     srg.hide = !(matchesQueryText && matchesSegment);
   }
-
-
 
   getPreferenceCards() {
     return this.load().map((data: any) => {

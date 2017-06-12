@@ -3,21 +3,34 @@
         <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-        <ion-title>Account</ion-title>
+        <ion-title>Stats</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content class="outer-content map-page">
+     <ion-card ion-item *ngIf="auth.authenticated()">
+            <ion-item *ngIf="auth.picture">
+                <ion-avatar item-left>
+                    <img src="{{ auth.picture }}">
+                </ion-avatar>
+                <h2>{{ auth.name }}</h2>
+                <p>{{ auth.email }}</p> 
+            </ion-item> 
+        </ion-card>
+
+
+
     <ion-row>
         <ion-col>
-            <div padding-top text-center *ngIf="auth.name">
-                <img src="{{auth.picture}}" alt="avatar">
-                <h2> {{auth.name}}</h2>
+            <div padding-top *ngIf="auth.name">
+              
 
 
                 <p><strong>ID: </strong> {{auth.globalId}}</p>
                 <p><strong>SpID: </strong> {{auth.fosId}}</p>
                 <p><strong>Surgery Stats: </strong> {{surgeryMetrics | json}}</p>
+                   
+                <p><strong>Card Stats: </strong> {{surgeryCardMetrics  | json}}</p>
                 <p><strong>Message Stats: </strong> {{messageMetrics | json}}</p>
                 <!--<ion-list inset>
                     <button ion-item (click)="updatePicture()">Update Picture</button>
@@ -43,13 +56,7 @@
             </div>
         </ion-col>
     </ion-row>
-    <ion-row>
-        <ion-col>
-
-            <div style="height: 100%; width: 100%" #mapCanvas id="map_canvas"></div>
-        </ion-col>
-    </ion-row>
-
+    
 
 
 </ion-content>

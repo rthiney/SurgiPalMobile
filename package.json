@@ -2,6 +2,7 @@
     "name": "io.cordova.surgimobile",
     "author": "Raphael Thiney",
     "homepage": "http://surgipal.com",
+    "version": "0.1.4",
     "description": "Ionic2Tabs: An Ionic project",
     "private": true,
     "scripts": {

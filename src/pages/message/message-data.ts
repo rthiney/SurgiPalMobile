@@ -6,12 +6,10 @@ import { Injectable } from '@angular/core';
 
 import { Http } from '@angular/http';
 
-
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import { AuthService, CONFIGURATION } from "../../shared/index";
-
 
 @Injectable()
 export class MessageData {
@@ -54,15 +52,11 @@ export class MessageData {
 
             if (message.DoctorImage == null) message.DoctorImage = (message.DoctorImage == null) ? 'assets/img/flat.png' : 'https://surgipal.com/uploads/avatars/' + message.DoctorImage; ;
            
-
             let d = new Date(message.createdAt);
 
             if (d.toLocaleDateString() != currentDate) {
 
                 currentDate = d.toLocaleDateString();
-
-
-
 
                 let newGroup = {
                     d: currentDate,
@@ -93,8 +87,6 @@ export class MessageData {
                 this.data.unread.push(newMessage);
             }
 
-
-
             data.metrics = this.metrics;
             this.data.groupedMessages = this.groupedMessages;
             ///this.events.publish('message:metrics',     this.metrics  ); 
@@ -105,7 +97,6 @@ export class MessageData {
     getTime(date?: Date) {
         return date != null ? date.getTime() : 0;
     }
-
 
     sortByDueDate(): void {
         this.data.sort((a: DoctorMessageModel, b: DoctorMessageModel) => {
@@ -141,14 +132,9 @@ export class MessageData {
             day.forEach((dt: any) => {
                 dt.hide = true;
                 dt.messages.forEach((msgs: any) => {
-                    msgs.message.hide = true;
-
-                    console.log('Before Filter', msgs.message.hide);
+                    msgs.message.hide = true; 
                     ///    if (msgs.message.viewed)   day.readCount++; else    day.unreadCount++;
-                    // check if this session should show or not
-                    this.filterMessages(msgs, queryWords, segment);
-                    console.log('After Filter', msgs.message.hide);
-
+                    // check if this session should show or not 
                     if (!msgs.message.hide)
                         day.shownMessages++;
 
@@ -195,10 +181,6 @@ export class MessageData {
         if (queryWords.length && matchesQueryText)
             console.log('MATCHED', matchesQueryText);
 
-
-
-
-
         // if the segement is 'favorites', but session is not a user favorite
         // then this session does not pass the segment test
         let matchesSegment = false;
@@ -209,14 +191,10 @@ export class MessageData {
         else if (srg.message.viewed && segment === 'read')
             matchesSegment = true;
 
-
         srg.message.hide = !(matchesQueryText && matchesSegment);
     }
 
-
-
 //https://scotch.io/tutorials/angular-2-http-requests-with-observables    <<READ THIS
-
 
         // updateMessage (body: Object): Observable<Comment[]> {
         // let bodyString = JSON.stringify(body); // Stringify payload
@@ -227,10 +205,6 @@ export class MessageData {
         //                  .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
         //                  .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
         // }
-
-
-
-
 
 // ngOnChanges() {
 //         // Listen to the 'edit'emitted event so as populate the model

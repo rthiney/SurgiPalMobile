@@ -67,7 +67,7 @@ export class SurgiPalApp {
         // { title: 'Stats', component: TabsPage, tabComponent: StatsPage, index: 2, icon: 'stats' }
     ];
     loggedInPages: PageInterface[] = [
-        { title: 'Logout', component: AboutPage, icon: 'log-out', logsOut: true }
+        { title: 'Logout', component: LoginPage, icon: 'log-out', logsOut: true }
     ];
     loggedOutPages: PageInterface[] = [
         { title: 'Login', component: LoginPage, icon: 'log-in' }
@@ -123,7 +123,10 @@ export class SurgiPalApp {
                 if (nav.canGoBack()) {
                     nav.pop();
                 } else {
-                    nav.setRoot(AboutPage);
+                    if(this.auth.authenticated)
+                    nav.setRoot(TabsPage);
+                    else
+                        nav.setRoot(LoginPage);
                 }
             });
 
@@ -148,6 +151,7 @@ export class SurgiPalApp {
                         console.log('isAuthenticated: false');
                         // Should FAIL
                         //  this.auth.authWithRivals(); 
+                        this.enableMenu(false);
                         this.rootPage = LoginPage;
                         this.auth.login();
                         // this.auth.checkHasSeenTutorial().then((hasSeenTutorial) =>
@@ -207,6 +211,7 @@ export class SurgiPalApp {
         this.events.subscribe('user:authenticated', (n) => {
             this.log.console('EVENT FIRED user:authenticated ' + n, this.auth);
             this.loadDataBackground();
+            this.nav.setRoot(this.appPages[0].component, { tabIndex: 0 });
             this.enableMenu(true);
         });
         this.events.subscribe('user:loginstorage', (n) => {

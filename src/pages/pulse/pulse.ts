@@ -56,12 +56,12 @@ export class PulsePage {
     private emailComposer: EmailComposer
   ) {
     this.date = new Date();
+    this.title = 'Today\'s Pulse (' + this.date.toLocaleDateString() + ')';
   }
 
   ionViewDidLoad() {
 
-    // this.insight.trackPageView('Pulse');
-    this.app.setTitle('Todays Pulse');
+    // this.insight.trackPageView('Pulse'); 
     this.metrics = this.surgeryData.metrics;
     console.log('FOSID', this.auth.fosId);
     if (this.auth.fosId !== undefined)
@@ -263,7 +263,6 @@ export class PulsePage {
     this.selectedPulse = s;
     this.navCtrl.push(SurgeryDetailPage, s);
   }
-
 
   openSocial(network: string, fab: FabContainer) {
     let loading = this.note.loadingCtrl.create({

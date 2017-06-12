@@ -22,6 +22,7 @@ export class AccountPage {
   events: any;
 
   username: string;
+  surgeryCardMetrics:any;
   surgeryMetrics: SurgeryMetrics;
   messageMetrics:MessageMetrics;
   @ViewChild('mapCanvas') mapElement: ElementRef;
@@ -44,9 +45,6 @@ export class AccountPage {
             content: `<h5>${this.auth.name}</h5>`
           });
 
-   
-
-
           let marker = new google.maps.Marker({
             position: myCenter,
             map: map, 
@@ -57,18 +55,17 @@ export class AccountPage {
             infoWindow.open(map, marker);
           });
       
-
         google.maps.event.addListenerOnce(map, 'idle', () => {
          // map.classList.add('show-map');
         });
  
-
   }
  
   ngAfterViewInit() {
     this.getUsername();
 
 this.surgeryMetrics = this.surgerySvc.metrics;
+    this.surgeryCardMetrics = this.surgerySvc.metrics.cards;
 this.messageMetrics = this.messageSvc.metrics;
       // this.events.subscribe('surgery:metrics', (metrics) => {
       //       console.log('SURGERY METRICS EVENT ACCOUNT  ', metrics)
