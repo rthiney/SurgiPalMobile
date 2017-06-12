@@ -1,73 +1,64 @@
-$categories: (
- ionic: color($colors, primary),
- angular: #AC282B,
- communication: #8E8D93,
- tooling: #FE4C52,
- services: #FD8B2D,
- design: #FED035,
- workshop: #69BB7B,
- food: #3BC7C4,
- documentation: #B16BE3,
- navigation: #6600CC,
-);
-
+$categories: ( ionic: color($colors, primary), angular: #AC282B, communication: #8E8D93, tooling: #FE4C52, services: #FD8B2D, design: #FED035, workshop: #69BB7B, food: #3BC7C4, documentation: #B16BE3, navigation: #6600CC, );
 @function auxiliary-categories() {
-  @return map-remove($categories);
+    @return map-remove($categories);
 }
 
 page-pulse {
-  @each $track, $value in auxiliary-categories() {
-   ion-item-sliding[track=#{$track}] ion-label {
-     border-left: 2px solid $value;
-     padding-left: 10px;
-   }
-  }
+    @each $track,
+    $value in auxiliary-categories() {
+        ion-item-sliding[track=#{$track}] ion-label {
+            border-left: 2px solid $value;
+            padding-left: 10px;
+        }
+    }
 }
 
-  ion-card {
+.about-info ion-card-header {
+    font-weight: bold;
+}
+
+ion-card {
     position: relative;
     text-align: center;
-  }
+}
 
-  .card-title {
+.card-title {
     position: absolute;
     top: 10%;
     font-size: 2.0em;
     width: 100%;
     font-weight: bold;
     color: #fff;
-  }
+}
 
-  .card-subtitle {
+.card-subtitle {
     font-size: 1.0em;
     position: absolute;
-    top: 23%;
+    top: 20%;
     width: 100%;
     color: #fff;
-  }
+}
 
- 
-  .pulse-card {
+.pulse-card {
     height: 100%;
     display: flex;
     flex-direction: column;
-
     ion-card-content {
-      flex: 1 1 auto;
+        flex: 1 1 auto;
     }
-  }
+}
+
 //     .pulse-card ion-avatar img {
 //   max-width: 50px;
 // }
 //   .pulse-card  img {
 //   max-width: 340px;
 // }
-  .pulse-card ion-card-header .item {
+.pulse-card ion-card-header .item {
     padding: 4px 16px;
-  }
+}
 
-  .pulse-card ion-card-content {
+.pulse-card ion-card-content {
     padding-left: 0;
     padding-right: 0;
-  }
- 
+}

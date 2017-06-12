@@ -80,7 +80,7 @@ export class FuturePulsePage {
     // Close any open sliding items when the schedule updates
     this.surgeryList && this.surgeryList.closeSlidingItems();
     this.futureData.getSurgeries(this.queryText, this.excludeTracks, this.segment, d, reset).subscribe((data: any) => {
-      this.shownSurgeries = data.shownSurgeries;
+      this.shownSurgeries = data.futureSurgeries;
       this.groups = data;
 
     });

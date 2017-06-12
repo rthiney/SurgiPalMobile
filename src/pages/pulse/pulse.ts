@@ -23,9 +23,10 @@ export class PulsePage {
   selectedPulse: any;
   dayIndex = 0;
   queryText = '';
-  segment = 'not';
   excludeTracks: any = [];
   surgeries: PulseViewModel[];
+  todaySurgeries: PulseViewModel[];
+  pastSurgeries: PulseViewModel[];
   shownSurgeries: any;
   dates: any = [];
   confDate: string;
@@ -33,6 +34,7 @@ export class PulsePage {
   groups: any = [];
   date: Date;
   dateIndex: number = 0;
+  segment: string = "today";
   private headers = new Headers({ 'Content-Type': 'application/json' });
   constructor(
     private authHttp: AuthHttp,
@@ -40,7 +42,7 @@ export class PulsePage {
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public auth: AuthService,
-    public surgeryData: SurgeryData,
+    private surgeryData: SurgeryData,
     public note: NotifyService,
     public log: LoggerService,
     public events: Events
@@ -59,31 +61,53 @@ export class PulsePage {
   }
   loadWatchers() {
     this.events.subscribe('email:billing', (data) => {
-
-      this.note.presentToast('Success', data.statusCode);
+      this.note.presentToast('Success', 'Billing email sent to ' + data);
     });
   }
 
+  // backDate() {
+  //   this.dateIndex--;
+  //   this.date.setDate(this.date.getDate() + this.dateIndex);
+  //   console.log('Date Search', this.date);
+  //   console.log('Date Index', this.dateIndex);
+  //   this.updateSchedule(this.date, true);
+  // }
+  // forwardDate() {
+  //   this.dateIndex++;
+  //   this.date.setDate(this.date.getDate() + this.dateIndex);
+  //   console.log('Date Search', this.date);
+  //   console.log('Date Index', this.dateIndex);
+  //   this.updateSchedule(this.date, true);
+  // }
 
-  backDate() {
-    this.dateIndex--;
-    this.date.setDate(this.date.getDate() + this.dateIndex);
-    console.log('Date Search', this.date);
-    console.log('Date Index', this.dateIndex);
-    this.updateSchedule(this.date, true);
+  updateSegment() {
+    console.group('updateSegment');
+    console.log('segment=' + this.segment);
+    
+    if (this.segment == 'today') {
+      this.shownSurgeries = this.surgeryData.data.todaySurgeries;
+      this.surgeries =    this.shownSurgeries
+ 
+    }
+    if (this.segment == 'past') {
+      this.app.setTitle('Past Surgeries');
+      this.shownSurgeries = this.surgeryData.data.pastSurgeries;
+      this.surgeries =     this.shownSurgeries
+ 
+    }
+    if (this.segment == 'future') {
+      this.app.setTitle('Future Surgeries');
+      this.shownSurgeries = this.surgeryData.data.shownSurgeries;
+      this.surgeries = this.surgeryData.data.shownSurgeries;
+    }
+     console.log('this.shownSurgeries',      this.shownSurgeries);
+      console.log('this.surgeries',      this.surgeries);
+      console.groupEnd();
   }
-  forwardDate() {
-    this.dateIndex++;
-    this.date.setDate(this.date.getDate() + this.dateIndex);
-    console.log('Date Search', this.date);
-    console.log('Date Index', this.dateIndex);
-    this.updateSchedule(this.date, true);
-  }
-
-
-  updateSchedule(d: Date = null, reset: boolean = false) {
-
-    let cntl = this.note.presentLoading('Loading Todays Pulse for ' + d.toLocaleDateString());
+  updateSchedule(d: Date = null, reset: boolean = false, refresher: any = null) {
+    console.group('updateSchedule');
+    console.log('passed in reset=' + reset, d);
+    let cntl = this.note.presentLoading('Loading Todays Pulse for ' + (d==null) ? 'Today' : d.toLocaleDateString());
     // Close any open sliding items when the schedule updates
     this.surgeryList && this.surgeryList.closeSlidingItems();
 
@@ -91,12 +115,19 @@ export class PulsePage {
       this.events.publish('pulse:filtered', data.shownSurgeries);
       console.log('getSurgeries', data);
       this.shownSurgeries = data.shownSurgeries;
+      this.todaySurgeries = data.todaySurgeries;
+      this.pastSurgeries = data.pastSurgeries;
+         this.surgeries =data.todaySurgeries;
       this.groups = data;
+      if (refresher)
+        refresher.complete();
 
       //      console.log('Grouped After Filter Data:',data);
       /// this.groupedSurgeries =data.filter(w =>w.hide==false); //data.groupedSurgeries;
       // console.log('Grouped After Filter:', data.filter(w =>w.hide==false));
       console.log('      this.shownSurgeries', this.shownSurgeries)
+      console.log('      this.todaySurgeries', this.todaySurgeries)
+      console.log('      this.pastSurgeries', this.pastSurgeries)
       console.log('      this.groups', this.groups)
 
       //  this.groups = data.surgeryType;
@@ -106,6 +137,8 @@ export class PulsePage {
     //  this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment).subscribe((data: any) => {
     //       this.shownSurgeries = data.shownSessions;
     //       this.dates = data.dates;
+
+    console.groupEnd();
   }
 
   //    let cntl = this.note.presentLoading('Loading Todays Pulse...');
@@ -167,9 +200,10 @@ export class PulsePage {
   // }
 
   doRefresh(refresher) {
-    this.updateSchedule();
-    refresher.complete();
+    this.updateSchedule(null, true, refresher);
+
   }
+
   private handleError(error: any): Promise<any> {
     console.log(error.message || error);
     let alert = this.note.alertCtrl.create({
@@ -197,6 +231,7 @@ export class PulsePage {
   showDetail(s: PulseViewModel) {
     // go to the session detail page
     // and pass in the session data 
+        this.selectedPulse = s; 
     this.navCtrl.push(SurgeryDetailPage, s);
   }
 
@@ -267,8 +302,7 @@ export class PulsePage {
     loading.present();
   }
   loadDetail(p: PulseViewModel) {
-    this.selectedPulse = p;
-    this.log.event('Loaded Pulse Detail');
+    this.selectedPulse = p; 
   }
 
   cancelSurgery(pulse: any, p: Element) {

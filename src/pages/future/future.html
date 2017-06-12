@@ -1,10 +1,11 @@
 <ion-header>
-    <ion-navbar no-border-bottom>
-        <button ion-button menuToggle>
+  <ion-navbar no-border-bottom="">
+    <button ion-button=""
+            menuToggle="">
       <ion-icon name="menu"></ion-icon>
     </button>
-   <ion-title>A look ahead...</ion-title>
-        <!--<ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
+    <ion-title>A look ahead...</ion-title>
+    <!--<ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
             <ion-segment-button value="not">
                 Not Completed
             </ion-segment-button>
@@ -13,7 +14,7 @@
             </ion-segment-button>
         </ion-segment> 
 -->
-       <!--<ion-buttons end>
+    <!--<ion-buttons end>
             <button ion-button icon-only (click)="backDate()">
   <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
       </button>
@@ -23,21 +24,20 @@
  <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
       </button>
         </ion-buttons>-->
-    </ion-navbar>
-
-    <!--<ion-toolbar no-border-top>
+  </ion-navbar>
+  <!--<ion-toolbar no-border-top>
         <ion-searchbar color="primary" [(ngModel)]="queryText" (ionInput)="updateSchedule()" placeholder="Search">
         </ion-searchbar>
     </ion-toolbar>-->
 </ion-header>
-
 <ion-content>
-    <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
-        </ion-refresher-content>
-    </ion-refresher>
-
- <!--<ion-item-group *ngFor="let group of groupedSurgeries">
+  <ion-refresher>
+    <ion-refresher-content pullingIcon="arrow-dropdown"
+                           pullingText="Pull to refresh"
+                           refreshingSpinner="circles"
+                           refreshingText="Refreshing..."></ion-refresher-content>
+  </ion-refresher>
+  <!--<ion-item-group *ngFor="let group of groupedSurgeries">
  
       <ion-item-divider light>{{group.d}}</ion-item-divider>
       <ion-item *ngFor="let s of group.surgeries">{{s.patient}}
@@ -48,32 +48,18 @@
  
     </ion-item-group>
  -->
-
- <ion-list #surgeryList [hidden]="shownSurgeries === 0">
-
-    <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
-
+  <ion-list>
+    <ion-item-group>
       <!--<ion-item-divider sticky>
         <ion-label>
           {{group.d}}
         </ion-label>
       </ion-item-divider>-->
-
-
-
-
-
-
-
-
-
-<ion-card *ngFor="let s of group.surgeries;   let i = index;" #slidingItem [attr.track]="s.surgery.admissionStatus | lowercase" [hidden]="s.surgery.hide"   >
-  <img src="assets/img/rooms/s{{i+1}}.PNG"/>
-    <div class="card-title">{{s.surgery.initials | uppercase}}</div>
-    <div class="card-subtitle">{{s.surgery.patient}}</div>
-
-   
-                        <!--<ion-item   (click)="loadDetail(s.surgery)"  [attr.class]="s.surgery.completed ? 'isRead1' : 'isRead0'">
+      <ion-card>
+        <img src="assets/img/rooms/s{{i+1}}.PNG" />
+        <div class="card-title">{{s.surgery.initials | uppercase}}</div>
+        <div class="card-subtitle">{{s.surgery.patient}}</div>
+        <!--<ion-item   (click)="loadDetail(s.surgery)"  [attr.class]="s.surgery.completed ? 'isRead1' : 'isRead0'">
                              
                               
                                   <ion-avatar item-left> 
@@ -82,171 +68,55 @@
                              <h2>{{s.surgery.patient}}</h2>
         <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
                             </ion-item>-->
-                      
-   <ion-item  (click)="loadDetail(s.surgery)">
-    <ion-avatar item-left>
-          <img [src]="s.surgery.doctorImage" />
-    </ion-avatar>
-           <h2>{{s.surgery.initials}}</h2>
-       <h2>{{s.surgery.patient}}</h2>
-           <p>  Status: {{s.surgery.admissionStatus }}</p>
-    <p>  Duration: {{s.surgery.surgeryTime}}</p>
-            <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
-            
-  </ion-item>
-      <ion-card-content>
-                 
-     <ion-list>
-
-
- 
-    <!--<button ion-item   (click)="showEditCodes(s,'CPT')">
-    <ion-icon name="barcode" item-left small></ion-icon>
-    <h2>CPT Codes</h2>
-    <p>{{s.surgery.cpt}}</p>
-  </button>
-    
-    <button ion-item   (click)="showEditCodes(s,'DX')">
-    <ion-icon name="barcode" item-left small></ion-icon>
-    <h2>DX Codes</h2>
-    <p>{{s.surgery.diagnosisCode}}</p>
-  </button>
-
-    <button ion-item small color="favorite"   (click)="sendBilling(s)">
-    <ion-icon name="cash" item-left small></ion-icon>
-    <h2>Review</h2>
-    <p>Review Preference Cards </p>
-  </button>
-      <button ion-item color="danger"  (click)="cancelSurgery(s.surgery,slidingItem)">
-    <ion-icon name="close-circle" item-left small></ion-icon>
-    <h2>Cancel</h2>
-    <p>Cancel surgery and remove from this list!</p>
-  </button>-->
-  
-   
-     </ion-list>
-             </ion-card-content>
-    </ion-card>
-
-
-
-
-
-
-<!--
-      <ion-item-sliding *ngFor="let surgery of group.surgeries" #slidingItem [attr.track]="surgery.surgery.preferenceCardName | lowercase" [hidden]="surgery.surgery.hide">
-
-        <button ion-item (click)="loadDetail(surgery.surgery)">
-          <h3>{{surgery.surgery.patient}}</h3>
+        <ion-item>
+          <ion-avatar item-left="">
+            <img />
+          </ion-avatar>
+          <h2>{{s.surgery.initials}}</h2>
+          <h2>{{s.surgery.patient}}</h2>
+          <p>Status: {{s.surgery.admissionStatus }}</p>
+          <p>Duration: {{s.surgery.surgeryTime}}</p>
           <p>
-            {{surgery.surgery.term | date:'shortDate'}} at  {{surgery.surgery.term | date:'shortTime'}} &mdash;
-            {{surgery.surgery.surgeryTime}}:
-            {{surgery.surgery.initials}}
-      
+            <i>{{s.surgery.term | date:'shortDate'}} at {{s.surgery.term | date:'shortTime'}}</i>
           </p>
-        </button>
- <ion-item>
-      {{surgery.cptArray?.join('*')}}
- </ion-item>
-  <ion-item>
-       {{surgery.surgery.cpt}}
- </ion-item>
-        
- <ion-icon></ion-icon>
-              <ion-item-options side="left">
-                    <button ion-button small color="secondary" (click)="showEditCodes(surgery.surgery,'CPT')"><ion-icon name=barcode>CPT</ion-icon></button>
-                    <button ion-button small color="secondary" (click)="showEditCodes(surgery.surgery,'DX')"><ion-icon name=barcode>DX</ion-icon></button>
-                </ion-item-options>
-                <ion-item-options side="right">
-                    <button ion-button small color="favorite" (click)="billSurgery(surgery.surgery)"><ion-icon name="cash">Bill</ion-icon></button>
-                    <button ion-button small color="danger" (click)="cancelSurgery(surgery.surgery,slidingItem)"><ion-icon name="highlight-off"> </ion-icon></button>
-                </ion-item-options>
-    
-
-      </ion-item-sliding>-->
-
+        </ion-item>
+        <ion-card-content>
+          <ion-list>
+            <button ion-item="">
+              <ion-icon item-left=""
+                        name="barcode"
+                        small=""></ion-icon>
+              <h2>CPT Codes</h2>
+              <p>{{s.surgery.cpt}}</p>
+            </button>
+            <button ion-item="">
+              <ion-icon item-left=""
+                        name="barcode"
+                        small=""></ion-icon>
+              <h2>DX Codes</h2>
+              <p>{{s.surgery.diagnosisCode}}</p>
+            </button>
+            <button color="favorite"
+                    ion-item=""
+                    small="">
+              <ion-icon item-left=""
+                        name="cash"
+                        small=""></ion-icon>
+              <h2>Review</h2>
+              <p>Review Preference Cards</p>
+            </button>
+            <button color="danger"
+                    ion-item="">
+              <ion-icon item-left=""
+                        name="close-circle"
+                        small=""></ion-icon>
+              <h2>Cancel</h2>
+              <p>Cancel surgery and remove from this list!</p>
+            </button>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
     </ion-item-group>
-
   </ion-list>
-
-  <ion-list-header [hidden]="shownSurgeries > 0">
- No Scheduled Surgeries.
-  </ion-list-header>
-
-
-
-
-
-
-
-
-
-<!--
-
-    <ion-list #surgeryList [hidden]="shownSurgeries === 0">
-        <ion-card *ngFor="let p of shownSurgeries">
-            <ion-item-sliding #pulse>
-                <ion-item>
-                    <ion-thumbnail item-left>
-                    
-                        <img src="/assets/img/person-flat.png">
-                    </ion-thumbnail>
-                    <h2>{{p.term | date:'shortDate' }}</h2>
-                    <h2>{{p.patient}}</h2>
-                    <p>{{p.initials}}</p>
-                </ion-item>
-                <ion-item-options side="left">
-                    <button ion-button small color="secondary" (click)="showEditCodes(p,'cpt')"><ion-icon name=barcode>CPT</ion-icon></button>
-                    <button ion-button small color="secondary" (click)="showEditCodes(p,'dx')"><ion-icon name=barcode>DX</ion-icon></button>
-                </ion-item-options>
-                <ion-item-options side="right">
-                    <button ion-button small color="favorite" (click)="billSurgery(p)"><ion-icon name="cash">Bill</ion-icon></button>
-                    <button ion-button small color="danger" (click)="cancelSurgery(p,pulse)"><ion-icon name="highlight-off"> </ion-icon></button>
-                </ion-item-options>
-            </ion-item-sliding>
-            <ion-card-content>
-                <p>{{p.cpt}}</p>
-                <p>{{ p.diagnosisCode}}
-            </ion-card-content>
-            <ion-row>
-                <ion-col>
-
-
-
-                    <button ion-button icon-left clear small>
-        <ion-icon name="thumbs-up"></ion-icon>
-        <div>Status:{{p.speciality}}</div>
-      </button>
-                </ion-col>
-                <ion-col>
-                <button ion-button icon-left clear small (click)="showDetail(p)">
-        <ion-icon name="share-alt"></ion-icon>
-        <div>Details </div>
-                </button>
-                </ion-col>
-                <ion-col center text-center>
-                    <ion-note>
-                        {{p.created_at | date:'shortDate' }}
-                    </ion-note>
-                </ion-col>
-            </ion-row>
-        </ion-card>
-    </ion-list>
-
-
-    <ion-list-header [hidden]="shownSurgeries !== 0">
-        No Surgeries Today!
-    </ion-list-header>-->
-
-    <!--<ion-fab bottom right #fab>
-    <button ion-fab><ion-icon name="share"></ion-icon></button>
-    <ion-fab-list side="top">
-      <button ion-fab color="vimeo" (click)="openSocial('Vimeo', fab)"><ion-icon name="logo-vimeo"></ion-icon></button>
-      <button ion-fab color="google" (click)="openSocial('Google+', fab)"><ion-icon name="logo-googleplus"></ion-icon></button>
-      <button ion-fab color="twitter" (click)="openSocial('Twitter', fab)"><ion-icon name="logo-twitter"></ion-icon></button>
-      <button ion-fab color="facebook" (click)="openSocial('Facebook', fab)"><ion-icon name="logo-facebook"></ion-icon></button>
-    </ion-fab-list>
-  </ion-fab>-->
-
-
+  <ion-list-header>No Scheduled Surgeries.</ion-list-header>
 </ion-content>

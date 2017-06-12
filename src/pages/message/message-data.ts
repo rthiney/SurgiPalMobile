@@ -22,7 +22,7 @@ export class MessageData {
 
     load(): any {
         if (this.data) {
-            console.log("NOT LOADING FROM SERVER");
+            console.log("NOT LOADING FROM SERVER DATA = ",this.data);
             return Observable.of(this.data);
         } else {
             // var url=CONFIGURATION.baseUrls.apiUrl +'surgeries/past/' + this.auth.fosId;
@@ -112,11 +112,11 @@ export class MessageData {
         });
     }
 
-    getMetrics() {
-        return this.load().subscribe((data: any) => {
+    getMetrics()   {
+        return this.load().map((data: any) => {
             let m = this.metrics;
             this.events.publish('message:metrics', m);
-            return m;
+            return  m
         })
     }
     getMessages(queryText = '', segment = 'unread',refresh=false) {

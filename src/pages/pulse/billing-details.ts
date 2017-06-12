@@ -56,9 +56,9 @@ export class BillingDetails {
     var content = new helper.Content(
       'text/html', 'I\'m replacing the <strong>body tag</strong>');
     var mail = new helper.Mail(from_email, subject, to_email, content);
-    // var personalization = mail.getPersonalizations();
-    // personalization[0].addCustomArg(new helper.CustomArgs('-surgeon-', 'Me Surgeon'));
-    // personalization[0].addSubstitution(new helper.Substitution('-patient-', 'Me Patient'));
+    var personalization = mail.getPersonalizations();
+    personalization[0].addCustomArg(new helper.CustomArgs('-surgeon-', 'Me Surgeon'));
+    personalization[0].addSubstitution(new helper.Substitution('-patient-', 'Me Patient'));
 
     //     personalization[0].addSubstitution(new helper.Substitution('-surgeon-',this.surgery.firstName + ' ' + this.surgery.lastName));
     //     personalization[0].addSubstitution(new helper.Substitution('-patient-', this.surgery.initials));
@@ -85,7 +85,7 @@ export class BillingDetails {
     //With promise
     sg.API(request)
       .then(response => {
-        this._events.publish('email:billing', response);
+        this._events.publish('email:billing', this.surgery.billingCoordinatorEmail);
         console.log(response.statusCode);
         console.log(response.body);
         console.log(response.headers);

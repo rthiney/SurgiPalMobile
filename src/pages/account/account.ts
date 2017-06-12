@@ -1,9 +1,15 @@
+ 
+import {SurgeryData} from '../pulse/index';
+import { HockeyApp } from 'ionic-hockeyapp';
 import {AuthService} from '../../shared/auth.service';
 import {AboutPage} from '../about/about';  
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { AlertController, NavController, Platform } from 'ionic-angular';
+import { AlertController, NavController, Platform, Events } from 'ionic-angular';
  
 import {SupportPage} from '../support/support'; 
+import { NotifyService } from "../../shared/index";
+import { MessageData } from "../message/index";
+import { SurgeryMetrics,MessageMetrics } from "../../models/metrics";
 declare var google: any;
 
 @Component({
@@ -12,12 +18,16 @@ declare var google: any;
 
 })
 export class AccountPage {
-  
+  _hockeyapp: any;
+  events: any;
+
   username: string;
-   
+  surgeryMetrics: SurgeryMetrics;
+  messageMetrics:MessageMetrics;
   @ViewChild('mapCanvas') mapElement: ElementRef;
  
-  constructor(public alertCtrl: AlertController, public nav: NavController, public auth: AuthService,public platform: Platform) {
+  constructor(public alertCtrl: AlertController, public nav: NavController, public auth: AuthService,public platform: Platform, public event:Events ,public _note: NotifyService,   _hockeyapp: HockeyApp,
+        private surgerySvc: SurgeryData, private messageSvc: MessageData) {
 
   }
   ionViewDidLoad() {
@@ -25,7 +35,7 @@ export class AccountPage {
        var myCenter = new google.maps.LatLng(this.auth.latitude,this.auth.longitude);
          var mapProp =   {
           center: myCenter,
-          zoom: 16
+          zoom: 25
        };
    let mapEle = this.mapElement.nativeElement;
      var map=new google.maps.Map(mapEle,mapProp);
@@ -57,7 +67,14 @@ export class AccountPage {
  
   ngAfterViewInit() {
     this.getUsername();
-    console.log('Clicked to update picture');
+
+this.surgeryMetrics = this.surgerySvc.metrics;
+this.messageMetrics = this.messageSvc.metrics;
+      // this.events.subscribe('surgery:metrics', (metrics) => {
+      //       console.log('SURGERY METRICS EVENT ACCOUNT  ', metrics)
+      //     this._hockeyapp.trackEvent(null, null, 'Account Metrics Callback');
+      //     this.surgeryMetrics =this.surgerySvc.metrics;
+      //   });
   }
 
   updatePicture() {

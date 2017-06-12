@@ -187,14 +187,15 @@ export class AuthService {
 
     // called on first load from app.component.ts
     public refreshJwt(refresh_token) {
+        console.group('RefreshJWT');
         console.log('Calling refreshJwt');
    this.storage.get('profile').then(profile => {
             if (profile) {
-                       console.log("refreshJwt profile from storage.",profile);
+              console.log("refreshJwt profile from storage.",profile);
                 this.dumpProfileVariables(JSON.parse(profile)); 
             }
         }).catch(error => {
-            console.error("No profile in storage.");
+            console.error("RefreshJWT No profile in storage.",error);
         });
 
 
@@ -223,8 +224,8 @@ export class AuthService {
                     }
                 });
             }
-        })
-
+               console.groupEnd();
+        }); 
     }
 
     public authenticated() {

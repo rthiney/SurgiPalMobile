@@ -1,3 +1,4 @@
+import { LoginPage } from './../pages/login/login';
 
 import { Component, ViewChild } from '@angular/core';
 
@@ -35,7 +36,8 @@ export interface PageInterface {
 }
 
 @Component({
-    templateUrl: 'app.html'
+    templateUrl: 'app.html',
+    providers: [SurgeryData, MessageData]
 })
 export class SurgiPalApp {
     isLab: boolean;
@@ -47,8 +49,7 @@ export class SurgiPalApp {
     @ViewChild(Nav) nav: Nav;
 
     //  @ViewChild('content') content: NavController;
-    @ViewChild(Menu) menu: Menu;
-
+    //@ViewChild(Menu) menu: Menu;
 
     // List of pages that can be navigated to from the left menu
     // the left menu only works after login
@@ -57,12 +58,18 @@ export class SurgiPalApp {
 
         { title: 'Today', component: TabsPage, tabComponent: PulsePage, icon: 'pulse', index: 0, badgeValue: 0, color: 'dark' },
         { title: 'Calendar', component: TabsPage, tabComponent: FuturePulsePage, index: 1, icon: 'calendar', badgeValue: 0, color: 'dark' },
-
         { title: 'Messages', component: TabsPage, tabComponent: MessageListPage, index: 2, icon: 'mail', badgeValue: 0, color: 'dark' },
         { title: 'Stats', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 3, badgeValue: 0, color: 'dark' },
         { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 4, icon: 'information-circle', badgeValue: 0, color: 'dark' }
+
         // { title: 'Stats', component: TabsPage, tabComponent: StatsPage, index: 2, icon: 'stats' }
     ];
+    loggedInPages: PageInterface[] = [
+        { title: 'Logout', component: AboutPage, icon: 'log-out', logsOut: true }
+    ];
+    loggedOutPages: PageInterface[] = [
+        { title: 'Login', component: LoginPage, icon: 'log-in' }
+    ]
 
     // loggedInPages: PageInterface[] = [
     //     { title: 'Account', component: AccountPage, icon: 'person' },
@@ -79,20 +86,22 @@ export class SurgiPalApp {
     rootPage: any;
 
     constructor(public events: Events,
-        //  public menu: MenuController,
+        public menu: MenuController,
         public platform: Platform,
         public auth: AuthService,
         public log: LoggerService,
         public _note: NotifyService, _hockeyapp: HockeyApp,
-        public surgerySvc: SurgeryData, public messageSvc: MessageData) {
-        this.hockeyapp = _hockeyapp;
-        this.rootPage = AccountPage;
+        private surgerySvc: SurgeryData, private messageSvc: MessageData) {
+
         platform.ready().then(() => {
+
+            this.hockeyapp = _hockeyapp;
+            this.rootPage = AboutPage;;
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             StatusBar.styleDefault();
             Splashscreen.hide();
-
+            this.listenToLoginEvents();
             // The Android ID of the app as provided by the HockeyApp portal. Can be null if for iOS only.
             let androidAppId = '67f7ab86a12c4fa1b48e9a4ba5aec358';
             // The iOS ID of the app as provided by the HockeyApp portal. Can be null if for android only.
@@ -112,7 +121,7 @@ export class SurgiPalApp {
                 if (nav.canGoBack()) {
                     nav.pop();
                 } else {
-                    nav.setRoot(AccountPage);
+                    nav.setRoot(AboutPage);
                 }
             });
 
@@ -124,24 +133,20 @@ export class SurgiPalApp {
                 })
                 .then((authenticated) => {
                     if (authenticated) {
-                        console.log('isAuthenticated in app.component: true');
-
+                        console.log('isAuthenticated: true');
                         // load the conference data  REFACTOR -- INSERT RIVALS QUERY HERE
 
-                        this.rootPage = AccountPage;
+                        this.rootPage = AboutPage;
                         this.enableMenu(true);
                         this.auth.startupTokenRefresh();
                         // this.auth.authWithRivals();  // now handled in event handler
-                        this.events.publish('user:authenticated', 'app.component startup');
-                        this.listenToLoginEvents();
-                        this.getMessageData();
-
+                        this.events.publish('user:authenticated', 'from getRefreshToken');
 
                     } else {
                         console.log('isAuthenticated: false');
                         // Should FAIL
                         //  this.auth.authWithRivals(); 
-                        this.rootPage = AboutPage;
+                        this.rootPage = LoginPage;
                         this.auth.login();
                         // this.auth.checkHasSeenTutorial().then((hasSeenTutorial) =>
                         // {
@@ -159,7 +164,7 @@ export class SurgiPalApp {
                 })
                 .catch((err) => {
 
-                    console.log('startup auth error:', err);
+                    console.error('startup auth error:', err);
                 })
         });
     }
@@ -186,28 +191,30 @@ export class SurgiPalApp {
             }, 1000);
         }
     }
+    loadDataBackground() {
+        setTimeout(() => {
+            this.getMessageData();
+            this.getSurgeryData();
+        }, 3000);
+    }
 
     listenToLoginEvents() {
+        console.group('Events');
         console.log('LISTENING FOR EVENTS');
 
-        this.events.subscribe('user:loginstorage', (n) => {
-            // this.log.console('event:user:loginstorage', this.auth.user); 
-            // this.log.console('event:fosId:loginstorage',this.auth.user.global_client_id); 
-            this.log.console('event:setAuthenticatedUserContext');
-            this.log.console('user:loginstorage' + n, this.auth.fosId);
-
-            //   this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
+        this.events.subscribe('user:authenticated', (n) => {
+            this.log.console('EVENT FIRED user:authenticated ' + n, this.auth);
+            this.loadDataBackground();
             this.enableMenu(true);
+        });
+        this.events.subscribe('user:loginstorage', (n) => {
+            this.log.console('EVENT FIRED user:loginstorage');
+            this.events.publish('user:authenticated', 'from EVENT user:loginstorage')
         });
 
         this.events.subscribe('user:login', (n) => {
-
-            this.log.console('event:user:login' + n, this.auth.fosId);
-
-            //  this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
-            //            this.log.console('event:setAuthenticatedUserContext');
-
-            this.enableMenu(true);
+            this.log.console('EVENT FIRED user:login');
+            this.events.publish('user:authenticated', 'from EVENT user:login')
         });
 
         this.events.subscribe('user:signup', () => {
@@ -218,36 +225,40 @@ export class SurgiPalApp {
             this.enableMenu(false);
         });
 
-        this.events.subscribe('message:metrics', (metrics) => {
-
-            console.log('MESSAGE METRICS EVENT ', metrics)
-            this.appPages[2].badgeValue = metrics.unread
-            this.messageMetrics = metrics;
-            this.getSurgeryData();
-        });
+        // this.events.subscribe('message:metrics', (metrics) => { 
+        //     console.log('MESSAGE METRICS EVENT ', metrics)
+        //     this.appPages[2].badgeValue = metrics.unread
+        //     this.messageMetrics = metrics;
+        //     this.getSurgeryData();
+        // });
         this.events.subscribe('surgery:metrics', (metrics) => {
             console.log('SURGERY METRICS EVENT  ', metrics)
             this.appPages[0].badgeValue = metrics.today;
             this.appPages[1].badgeValue = metrics.pending;
             this.surgeryMetrics = metrics;
         });
-
+        console.groupEnd();
     }
     getMessageData() {
-        console.log('Getting Data In MessageData Background');
+        console.group("Message Data");
+        console.log('Getting MessageData Background', this.auth.user);
         this.messageSvc.getMetrics().subscribe((data: any) => {
+            this.appPages[2].badgeValue = data.unread;
         },
             err => {
-                console.log(err);
+                console.error(err);
             },
             () => {
                 console.log('MessageData Background completed');
             });
+        console.groupEnd();
     }
     getSurgeryData() {
-
-        console.log('Getting Data In SurgeryData Background');
+        console.group("Surgery Data");
+        console.log('Getting SurgeryData Background');
         this.surgerySvc.getMetrics().subscribe((data: any) => {
+            this.appPages[0].badgeValue = data.today;
+            this.appPages[1].badgeValue = data.pending;
         },
             err => {
                 console.log(err);
@@ -258,14 +269,8 @@ export class SurgiPalApp {
 
     }
     enableMenu(loggedIn: boolean) {
-        this.menu.enabled = loggedIn;
-
-        //  enable(loggedIn, 'loggedInMenu');
-        //     this.menu.enable(!loggedIn, 'loggedOutMenu');
-    }
-    logout() {
-        this.menu.enabled = false;
-        this.auth.logout();
+        this.menu.enable(loggedIn, 'loggedInMenu');
+        this.menu.enable(!loggedIn, 'loggedOutMenu');
     }
     isActive(page: PageInterface) {
         let childNav = this.nav.getActiveChildNav();

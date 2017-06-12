@@ -36,9 +36,9 @@ export class FutureData {
       var month = d.getUTCMonth() + 1; //months from 1-12
       var day = d.getUTCDate();
       var year = d.getUTCFullYear()+10;
-      //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
+    var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
       //var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
-      var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/0/0/' + year;
+      //var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/0/0/' + year;
 // var url = 'http://surgipal.com/api/api.php/surgeriesview/?transform=1&include=specialty&filter=doctorFosId,eq,' + this.auth.fosId + '&filter=term,sw,2017-10'
    //   var url = 'http://surgipal.com/api/api.php/surgeriesview/?transform=1&filter[]=doctorFosId,eq,' + this.auth.fosId + '&filter[]=term,sw,' + d.getUTCFullYear() + '&filter[]=completed,is,null&satisfy=all';
       
@@ -54,25 +54,28 @@ export class FutureData {
   processData(data: any) {
     // just some good 'ol JS fun with objects and arrays
     // build up the data by linking speakers to sessions
-    this.data = data.json();
-
+    this.data = data.json(); 
     this.data.surgeriesCompleted = [];
     this.data.surgeriesNotCompleted = [];
+        this.data.futureSurgeries  = [];
     let currentDate = '';
     let today = new Date();
     let currentSurgeries = [];
     // loop through each surgery
     this.data.forEach((surgery: PulseViewModel) => {
-
+  
       surgery.doctorImage = 'https://surgipal.com/uploads/avatars/' + surgery.doctorImage;
       let d = new Date(surgery.term);
-      if (d.toLocaleDateString() === today.toLocaleDateString())
+      if (d.toLocaleDateString() >= today.toLocaleDateString())
         this.metrics.today++;
       if (d > new Date())
         this.metrics.pending++;
+else
+return;
 
-      if (d.toLocaleDateString() != currentDate) {
 
+
+      if (d.toLocaleDateString() != currentDate) { 
         currentDate = d.toLocaleDateString();
         ///   this.data.dates.push(currentDate);
 
@@ -102,6 +105,10 @@ export class FutureData {
         this.data.surgeriesCompleted.push(newSurgery);
       else
         this.data.surgeriesNotCompleted.push(newSurgery);
+
+
+
+
 
       if (surgery.preferenceCardName) {
         if (this.metrics.cards.indexOf(surgery.preferenceCardName.trim()) < 0) {
