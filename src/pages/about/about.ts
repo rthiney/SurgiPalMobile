@@ -10,6 +10,7 @@ import { PopoverPage } from '../about-popover/about-popover';
 })
 export class AboutPage { 
 info: string = "services";
+
   constructor(public popoverCtrl: PopoverController) { }
 
   presentPopover(event: Event) {

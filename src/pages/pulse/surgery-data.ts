@@ -1,5 +1,6 @@
+ 
 import { Events } from 'ionic-angular';
-import { SurgeryMetrics } from './../../models/metrics';
+import { SurgeryMetrics, SurgeryGroup, SurgeryGroupItem } from './../../models/metrics';
 import { PulseViewModel } from './../../models/viewmodels/index';
 
 import { AuthHttp } from 'angular2-jwt';
@@ -21,21 +22,15 @@ export class SurgeryData {
   groupedSurgeries = [];
   constructor(public authHttp: AuthHttp, public auth: AuthService, public events: Events) { }
 
-  load(dateObj: Date = null): any {
+  load(): any {
     if (this.data) {
       console.log("NOT LOADING FROM SERVER", this.data);
       return Observable.of(this.data);
     } else {
-      if (dateObj != null)
-        console.log('Date Surgery Search IS NOT TODAY');
-
-      var d = (dateObj == null) ? new Date() : dateObj;
-
-      console.log("Date Surgery Search Set for", d);
-      //   var d = new Date();
-      var month = d.getUTCMonth() + 1; //months from 1-12
-      var day = d.getUTCDate();
-      var year = d.getUTCFullYear();
+      var d = new Date();
+      //  var month = d.getUTCMonth() + 1; //months from 1-12
+      //  var day = d.getUTCDate();
+      //  var year = d.getUTCFullYear();
       var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
       // var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
 
@@ -53,17 +48,16 @@ export class SurgeryData {
     // just some good 'ol JS fun with objects and arrays
     // build up the data by linking speakers to sessions
     this.data = data.json();
+    this.groupedSurgeries = [];
     this.data.surgeriesCompleted = [];
     this.data.surgeriesNotCompleted = [];
     this.data.futureSurgeries = [];
     this.data.pastSurgeries = [];
     this.data.todaySurgeries = [];
-
     let currentDate = '';
     let today = new Date();
     let currentSurgeries = [];
-    // loop through each surgery
-    console.log(data.length);
+
     this.data.forEach((surgery: PulseViewModel) => {
       try {
 
@@ -74,42 +68,29 @@ export class SurgeryData {
         surgery.cpt = surgery.cpt.replace('level,', 'level ');
         surgery.diagnosisCode = surgery.diagnosisCode.replace('level,', 'level ');
 
-        let newSurgery = {
-          surgery: surgery,
-          cptArray: (surgery.cpt) ? surgery.cpt.split(',').filter(w => !!w.trim()).sort() : null,
-          dxArray: (surgery.diagnosisCode) ? surgery.diagnosisCode.split(',').filter(w => !!w.trim()).sort() : null,
-          hide: false
-        };
-
-        // if (d.toLocaleDateString() === today.toLocaleDateString())
-        //   this.data.todaySurgeries.push(newSurgery); 
-        // else if (d > new Date())
-        //   this.data.futureSurgeries.push(newSurgery);
-        // else
-        //   this.data.pastSurgeries.push(newSurgery);
+        let newSurgery =new SurgeryGroupItem(surgery);
+      
 
         if (d.toLocaleDateString() != currentDate) {  ///group by date
           currentDate = d.toLocaleDateString();
 
-          let newGroup = {
-            d: currentDate,
-            surgeries: [],
-            hide: false
-          };
-
+          let newGroup = new SurgeryGroup(d);
+  
           currentSurgeries = newGroup.surgeries;
           this.groupedSurgeries.push(newGroup);
         }
 
- 
+
         if (d.toLocaleDateString() === today.toLocaleDateString())
-          this.data.todaySurgeries.push(newSurgery); 
+          this.data.todaySurgeries.push(newSurgery);
         else if (d > new Date()) {
           this.data.futureSurgeries.push(newSurgery);
           currentSurgeries.push(newSurgery);
         }
         else
           this.data.pastSurgeries.push(newSurgery);
+
+
 
 
         if (surgery.completed !== null && surgery.completed)
@@ -163,9 +144,27 @@ export class SurgeryData {
       }
     });
 
-    this.data.groupedSurgeries = this.groupedSurgeries;
-    // this.groupedSurgeries = this.data.groupedSurgeries;
+    this.data.groupedSurgeries = this.groupedSurgeries.sort((a: SurgeryGroup, b: SurgeryGroup) => {
+      return a.realDate.getDate() - b.realDate.getDate();
+    });
 
+    console.group('sort today');
+    this.data.todaySurgeries = this.data.todaySurgeries.sort((a: any, b: any) => {
+      console.log('Term', a.surgery.term);
+      return new Date(b.surgery.term).getDate() - new Date(a.surgery.term).getDate();
+    }); 
+    console.groupEnd();
+
+
+
+    console.group('sort past');
+    this.data.pastSurgeries = this.data.pastSurgeries.sort((a: any, b: any) => {
+      console.log('Term', a.surgery.term);
+      return new Date(b.surgery.term).getDate() - new Date(a.surgery.term).getDate();
+    }); 
+    console.groupEnd();
+
+ 
     var uniqueCpt = this.metrics.cptCodes.reduce(function (acc, curr) {
       if (typeof acc[curr] == 'undefined') {
         acc[curr] = 1;
@@ -190,11 +189,25 @@ export class SurgeryData {
     this.metrics.uniqueCpt = uniqueCpt
     this.metrics.diagnosisCodes = this.metrics.diagnosisCodes.filter(function (item, i, ar) { return ar.indexOf(item) === i; });
     this.metrics.cptCodes = this.metrics.cptCodes.filter(function (item, i, ar) { return ar.indexOf(item) === i; });
+    this.metrics.future = this.data.futureSurgeries.length;
+    this.metrics.past = this.data.pastSurgeries.length;
+    this.metrics.today = this.data.todaySurgeries.length;
+    this.data.metrics = this.metrics;
     console.log('Processed SurgeryDone', this.data)
- 
+
     console.groupEnd();
     return this.data;
 
+  }
+  getTime(date?: Date) {
+    return date != null ? date.getTime() : 0;
+  }
+
+
+  sortByDueDate(): void {
+    this.data.sort((a: any, b: any) => {
+      return a.d.getDate() - b.d.getDate();
+    });
   }
   getMetrics() {
     return this.load().map((data: any) => {
@@ -203,19 +216,17 @@ export class SurgeryData {
       return m;
     })
   }
-  getSurgeries(queryText = '', excludeTracks: any[] = [], segment = 'today', date: Date = null, reset = false) {
+  getSurgeries(queryText = '', excludeTracks: any[] = [], segment = 'today', reset = false) {
 
     if (reset) this.data = null;
-    if (date != null) {
-      this.data = null;
 
-    }
-    return this.load(date).map((data: any) => {
+    return this.load().map((data: any) => {
 
-      if (!this.data.groupedSurgeries) return null;
-
-      let day = this.data.groupedSurgeries;
+      let day = data.groupedSurgeries;
       day.shownSurgeries = 0;
+      day.todaySurgeries = this.data.todaySurgeries;
+      day.pastSurgeries = this.data.pastSurgeries;
+
       queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
       let queryWords = queryText.split(' ').filter(w => !!w.trim());
 
@@ -275,51 +286,6 @@ export class SurgeryData {
     // });
 
   }
-  // return this.load().map((data: any) => {
-  //   queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
-  //   let queryWords = queryText.split(' ').filter(w => !!w.trim().length);
-  //   if (queryWords.length) {
-  //     // of any query word is in the session name than it passes the query test
-  //     queryWords.forEach((queryWord: string) => {
-  //       if (surgery.cpt.toLowerCase().indexOf(queryWord) > -1) {
-  //         this.shownSurgeries.push(surgery);
-  //       } else if (surgery.diagnosisCode.toLowerCase().indexOf(queryWord) > -1) {
-  //         this.shownSurgeries.push(surgery);
-
-  //       } else if (surgery.prefereceCardName.toLowerCase().indexOf(queryWord) > -1) {
-  //         this.shownSurgeries.push(surgery);
-
-  //       } else if (surgery.patient.toLowerCase().indexOf(queryWord) > -1) {
-  //         this.shownSurgeries.push(surgery);
-  //       } else if (surgery.initials.toLowerCase().indexOf(queryWord) > -1) {
-  //         this.shownSurgeries.push(surgery);
-  //       }
-  //     });
-  // }
-
-  //     let day = data.schedule[dayIndex];
-  //     day.shownSessions = 0;
-
-  //     day.groups.forEach((group: any) => {
-  //       group.hide = true;
-
-  //       group.sessions.forEach((session: any) => {
-  //         // check if this session should show or not
-  //         this.filterSession(session, queryWords, excludeTracks, segment);
-
-  //         if (!session.hide) {
-  //           // if this session is not hidden then this group should show
-  //           group.hide = false;
-  //           day.shownSessions++;
-  //         }
-  //       });
-
-  //     });
-
-  //     return day;
-  //   });
-  // }
-
   filterSession(srg: any, queryWords: string[], excludeTracks: any[], segment: string) {
 
     let matchesQueryText = false;
@@ -369,7 +335,7 @@ export class SurgeryData {
 
     // if the segement is 'favorites', but session is not a user favorite
     // then this session does not pass the segment test
-     let matchesSegment = true;
+    let matchesSegment = true;
     // if (!srg.surgery.completed && segment === 'today')
     //   matchesSegment = true;
     // if (srg.surgery.completed && segment === 'future')
@@ -381,15 +347,7 @@ export class SurgeryData {
     srg.hide = !(matchesQueryText && matchesSegment);
   }
 
-  getSpeakers() {
-    return this.load().map((data: any) => {
-      return data.dates.sort((a: any, b: any) => {
-        let aName = a.name.split(' ').pop();
-        let bName = b.name.split(' ').pop();
-        return aName.localeCompare(bName);
-      });
-    });
-  }
+
 
   getPreferenceCards() {
     return this.load().map((data: any) => {
@@ -397,11 +355,6 @@ export class SurgeryData {
     });
   }
 
-  getMap() {
-    return this.load().map((data: any) => {
-      return data.map;
-    });
-  }
   private handleError(error: any) {
     // In a real world app, we might use a remote logging infrastructure
     // We'd also dig deeper into the error to get a better message

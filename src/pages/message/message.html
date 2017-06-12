@@ -5,17 +5,17 @@
     </button>
 
         <ion-segment [(ngModel)]="segment" (ionChange)="updateSegment()">
-             <ion-segment-button value="all">
+            <ion-segment-button value="all">
                 All
                 <ion-badge color="secondary" item-right>{{metrics?.unread + metrics?.read}} </ion-badge>
             </ion-segment-button>
             <ion-segment-button value="unread">
                 Unread
-                <ion-badge color="secondary" item-right>{{metrics?.unread}} </ion-badge>
+                <ion-badge color="favorite" item-right>{{metrics?.unread}} </ion-badge>
             </ion-segment-button>
             <ion-segment-button value="read">
                 Read
-                <ion-badge color="favorite" item-right> {{metrics?.read}}</ion-badge>
+                <ion-badge color="google" item-right> {{metrics?.read}}</ion-badge>
             </ion-segment-button>
         </ion-segment>
     </ion-navbar>
@@ -52,34 +52,34 @@
                     {{group.d}}
                 </ion-label>
             </ion-item-divider>
-          
 
-                <ion-item-sliding *ngFor="let m of group.messages"  [attr.class]="m.message.viewed ? 'isRead1' : 'isRead0'" [hidden]="m.message.hide">  
-                    <ion-item (click)="showDetails(m.message)"  >
-                        <ion-avatar item-left>
-                            <img [src]="m.message.DoctorImage">
-                        </ion-avatar>
-                        <h2>{{m.message.subject}} </h2>
-                        <h3>{{m.message.message}}</h3>
-                        <p> {{m.message.createdAt | date:'longDate' }} at {{m.message.createdAt | date:'shortTime' }} <i>( {{m.message.createdAt | amTimeAgo}}) </i> </p>
-                    </ion-item>
-                    <ion-item-options side="left">
-                        <button ion-button color="danger" (click)="delete(m.message)">
+
+            <ion-item-sliding *ngFor="let m of group.messages" [attr.class]="m.message.viewed ? 'isRead1' : 'isRead0'" [hidden]="m.message.hide">
+                <ion-item (click)="showDetails(m.message)">
+                    <ion-avatar item-left>
+                        <img [src]="m.message.DoctorImage">
+                    </ion-avatar>
+                    <h2>{{m.message.subject}} </h2>
+                    <h3>{{m.message.message}}</h3>
+                    <ion-note item-right> {{m.message.createdAt | date:'longDate' }} at {{m.message.createdAt | date:'shortTime' }} <i>( {{m.message.createdAt | amTimeAgo}}) </i> </ion-note>
+                </ion-item>
+                <ion-item-options side="left">
+                    <button ion-button color="danger" (click)="delete(m.message)">
         <ion-icon name="trash"></ion-icon>
         Delete
       </button>delete
-                        <!--<button ion-button color="secondary">
+                    <!--<button ion-button color="secondary">
         <ion-icon name="call"></ion-icon>
         Call
       </button>-->
-                    </ion-item-options>
-                    <ion-item-options side="right">
-                        <button ion-button color="primary" (click)="reply(m.message)">
+                </ion-item-options>
+                <ion-item-options side="right">
+                    <button ion-button color="primary" (click)="reply(m.message)">
         <ion-icon name="mail"></ion-icon>
         Reply
       </button>
-                    </ion-item-options>
-                </ion-item-sliding> 
+                </ion-item-options>
+            </ion-item-sliding>
 
         </ion-item-group>
 

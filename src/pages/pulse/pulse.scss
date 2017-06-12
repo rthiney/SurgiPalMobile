@@ -6,10 +6,28 @@ $categories: ( ionic: color($colors, primary), angular: #AC282B, communication: 
 page-pulse {
     @each $track,
     $value in auxiliary-categories() {
-        ion-item-sliding[track=#{$track}] ion-label {
-            border-left: 2px solid $value;
+        // ion-item-sliding[track=#{$track}] ion-label {
+        //     border-left: 2px solid $value;
+        //     padding-left: 10px;
+        // }
+        ion-item-sliding {
+            //background-color:#DBDBDB; 
+            border-bottom: 2px solid map-get($colors, primary);
             padding-left: 10px;
         }
+        ion-item-divider {
+            //background-color:#DBDBDB; 
+            border-left: none;
+            padding-left: 10px;
+        }
+    }
+    ion-card-header {
+        font-weight: bold;
+    }
+    ion-item-sliding ion-note {
+        font-size: 12px;
+        align-self: flex-end;
+        margin-top: 14px;
     }
 }
 
@@ -22,6 +40,13 @@ ion-card {
     text-align: center;
 }
 
+ion-note {
+    font-size: 12px;
+    align-self: flex-end;
+    color: red;
+    margin-top: 14px;
+}
+
 .card-title {
     position: absolute;
     top: 10%;
@@ -31,10 +56,16 @@ ion-card {
     color: #fff;
 }
 
+.note {
+    font-size: 12px;
+    align-self: flex-start;
+    margin-top: 14px;
+}
+
 .card-subtitle {
     font-size: 1.0em;
     position: absolute;
-    top: 20%;
+    top: 15%;
     width: 100%;
     color: #fff;
 }

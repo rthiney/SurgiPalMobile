@@ -1,15 +1,14 @@
-
- 
-
 .about-header {
     padding: 16px;
     width: 100%;
     min-height: 150px;
     text-align: center;
 }
-.about-info ion-card-header{
- font-weight: bold;
+
+.about-info ion-card-header {
+    font-weight: bold;
 }
+
 .about-header img {
     // max-width: 200px;
     // min-height: 115px;
@@ -23,8 +22,8 @@
 }
 
 .about-info ion-icon {
-    color: color($colors, primary);
-    width: 20px;
+    color: color($colors, secondary);
+    width: 50px;
 }
 
 .md,
@@ -35,10 +34,10 @@
 }
 
 .ios .about-info {
-    text-align: center;
+    text-align: left;
 }
 
 .ios .about-info ion-icon {
-    width: auto;
-    margin-right: 10px;
+    // width: auto;
+    // margin-right: 10px;
 }

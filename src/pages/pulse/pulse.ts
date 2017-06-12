@@ -1,3 +1,4 @@
+import { SurgeryMetrics, SurgeryGroupItem } from './../../models/metrics';
 
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Headers } from '@angular/http';
@@ -14,6 +15,7 @@ import { AuthService, NotifyService, LoggerService, CONFIGURATION } from "../../
   templateUrl: 'pulse.html'
 })
 export class PulsePage {
+  activeElement: Element;
   title: string;
   // the list is a child of the schedule page
   // @ViewChild('scheduleList') gets a reference to the list
@@ -25,10 +27,10 @@ export class PulsePage {
   dayIndex = 0;
   queryText = '';
   excludeTracks: any = [];
-  surgeries: PulseViewModel[];
-  todaySurgeries: PulseViewModel[];
-  pastSurgeries: PulseViewModel[];
-  shownSurgeries: any;
+  surgeries: any[];
+  todaySurgeries: SurgeryGroupItem[];
+  pastSurgeries: SurgeryGroupItem[];
+  shownSurgeries: number;
   dates: any = [];
   confDate: string;
   groupedSurgeries = [];
@@ -36,6 +38,7 @@ export class PulsePage {
   date: Date;
   dateIndex: number = 0;
   segment: string = "today";
+   metrics:SurgeryMetrics;
   private headers = new Headers({ 'Content-Type': 'application/json' });
   constructor(
     private authHttp: AuthHttp,
@@ -55,14 +58,16 @@ export class PulsePage {
 
     // this.insight.trackPageView('Pulse');
     this.app.setTitle('Todays Pulse');
+    this.metrics=this.surgeryData.metrics;
     console.log('FOSID', this.auth.fosId);
     if (this.auth.fosId !== undefined)
       this.updateSchedule();
     this.loadWatchers();
   }
   loadWatchers() {
-    this.events.subscribe('email:billing', (data) => {
-      this.note.presentToast('Success', 'Billing email sent to ' + data);
+    this.events.subscribe('email:billing', (data:PulseViewModel, ) => {
+      this.activeElement.remove();
+      this.note.presentToast('Success', 'Billing email sent to ' + data.billingCoordinatorEmail);
     });
   }
 
@@ -86,41 +91,41 @@ export class PulsePage {
     console.log('segment=' + this.segment);
     
     if (this.segment == 'today') {
-      this.shownSurgeries = this.surgeryData.data.todaySurgeries;
-      this.surgeries =    this.shownSurgeries
- this.title = 'Today\'s Pulse for '+ this.date.toDateString();
+      this.shownSurgeries = this.surgeryData.metrics.today;
+  
+ this.title = 'Today\'s Pulse ('+this.date.toLocaleDateString() +')';
     }
     if (this.segment == 'past') {
       this.app.setTitle('Past Surgeries');
-      this.shownSurgeries = this.surgeryData.data.pastSurgeries;
-      this.surgeries =     this.shownSurgeries
+      this.shownSurgeries = this.surgeryData.metrics.past;
+  
   this.title = 'Past Surgeries';
     }
     if (this.segment == 'future') {
       this.app.setTitle('Future Surgeries');
-      this.shownSurgeries = this.surgeryData.data.shownSurgeries;
-      this.surgeries = this.surgeryData.data.shownSurgeries;
+      this.shownSurgeries = this.surgeryData.metrics.future;
+ 
       this.title = 'Future Surgeries';
     }
      console.log('this.shownSurgeries',      this.shownSurgeries);
       console.log('this.surgeries',      this.surgeries);
       console.groupEnd();
   }
-  updateSchedule(d: Date = null, reset: boolean = false, refresher: any = null) {
+  updateSchedule(  reset: boolean = false, refresher: any = null) {
     console.group('updateSchedule');
-    console.log('passed in reset=' + reset, d);
-    let cntl = this.note.presentLoading('Loading Todays Pulse for ' + (d==null) ? 'Today' : d.toLocaleDateString());
+    console.log('passed in reset=' + reset );
+    let cntl = this.note.presentLoading('Loading Surgeries...');
     // Close any open sliding items when the schedule updates
     this.surgeryList && this.surgeryList.closeSlidingItems();
 
-    this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment, d, reset).subscribe((data: any) => {
-      this.events.publish('pulse:filtered', data.shownSurgeries);
-      console.log('getSurgeries', data);
+    this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment, reset).subscribe((data: any) => {
+ 
+      console.log('getSurgeries return', data);
       this.shownSurgeries = data.shownSurgeries;
-      this.todaySurgeries = data.todaySurgeries;
-      this.pastSurgeries = data.pastSurgeries;
-         this.surgeries =data.todaySurgeries;
+      this.todaySurgeries = this.surgeryData.data.todaySurgeries;
+      this.pastSurgeries = this.surgeryData.data.pastSurgeries; 
       this.groups = data;
+
       if (refresher)
         refresher.complete();
 
@@ -202,7 +207,7 @@ export class PulsePage {
   // }
 
   doRefresh(refresher) {
-    this.updateSchedule(null, true, refresher);
+    this.updateSchedule(true, refresher);
 
   }
 
@@ -236,62 +241,7 @@ export class PulsePage {
         this.selectedPulse = s; 
     this.navCtrl.push(SurgeryDetailPage, s);
   }
-
-  addFavorite(slidingItem: ItemSliding, sessionData: any) {
-
-    // if (this.user.hasFavorite(sessionData.name)) {
-    //   // woops, they already favorited it! What shall we do!?
-    //   // prompt them to remove it
-    //   this.removeFavorite(slidingItem, sessionData, 'Favorite already added');
-    // } else {
-    //   // remember this session as a user favorite
-    //   this.user.addFavorite(sessionData.name);
-
-    //   // create an alert instance
-    //   let alert = this.alertCtrl.create({
-    //     title: 'Favorite Added',
-    //     buttons: [{
-    //       text: 'OK',
-    //       handler: () => {
-    //         // close the sliding item
-    //         slidingItem.close();
-    //       }
-    //     }]
-    //   });
-    //   // now present the alert on top of all other content
-    //   alert.present();
-    // }
-  }
-
-  removeFavorite(slidingItem: ItemSliding, sessionData: any, title: string) {
-    // let alert = this.alertCtrl.create({
-    //   title: title,
-    //   message: 'Would you like to remove this session from your favorites?',
-    //   buttons: [
-    //     {
-    //       text: 'Cancel',
-    //       handler: () => {
-    //         // they clicked the cancel button, do not remove the session
-    //         // close the sliding item and hide the option buttons
-    //         slidingItem.close();
-    //       }
-    //     },
-    //     {
-    //       text: 'Remove',
-    //       handler: () => {
-    //         // they want to remove this session from their favorites
-    //         this.user.removeFavorite(sessionData.name);
-    //         this.updateSchedule();
-
-    //         // close the sliding item and hide the option buttons
-    //         slidingItem.close();
-    //       }
-    //     }
-    //   ]
-    // });
-    // // now present the alert on top of all other content
-    // alert.present();
-  }
+ 
 
   openSocial(network: string, fab: FabContainer) {
     let loading = this.note.loadingCtrl.create({
@@ -308,9 +258,11 @@ export class PulsePage {
   }
 
   cancelSurgery(pulse: any, p: Element) {
-    this.selectedPulse = pulse;
-    console.log('cancelling', pulse.patient.toString());
+    pulse.hide=true; 
+    this.activeElement = p;
+  this.surgeryData.metrics.today--;
     p.remove();
+    this.note.presentToast('Cancel','Surgery has been cancelled.');
   }
 
   sendBilling(p: any) {
@@ -354,45 +306,5 @@ export class PulsePage {
     });
 
   }
-
-  // addHospital()
-  // {
-  //   console.log('Add Hospital Clicked');
-  //   this.navCtrl.push(AddhospitalPage);
-  // }
-  // addStaff()
-  // {
-  //   console.log('Add Staff Clicked');
-  //   this.navCtrl.push(StaffPage);
-  // }
-  // addSurgery()
-  // {
-  //   this.navCtrl.push(AddsurgeryPage);
-  // }
-
-  // presentLoading()
-  // {
-  //   let loader = this.note.loadingCtrl.create({
-  //     content: "Checking pulse...",
-  //     duration: 5000,
-  //     dismissOnPageChange: true
-  //   });
-  //   loader.present();
-  // }
-
-  // presentAlert(message:string){
-  //   let alert = this.note.alertCtrl.create({
-  //     title: 'Alert',
-  //     buttons: [{
-  //       text: 'OK',
-  //       handler: () =>
-  //       {
-  //         // close the sliding item
-  //        // slidingItem.close();
-  //       }
-  //     }]
-  //   });
-  //   // now present the alert on top of all other content
-  //   alert.present();
-  // }
+ 
 }

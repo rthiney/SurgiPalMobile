@@ -24,7 +24,7 @@ export class BillingDetails {
     this.pulseItem = params.data;
     this.surgery = this.pulseItem.surgery;
     this.mailForm = this.formBuilder.group({
-      to: [this.pulseItem.surgery.coordinatorEmail, Validators.compose([Validators.minLength(0), Validators.maxLength(255), Validators.required])],
+      to: [this.pulseItem.surgery.billingCoordinatorEmail, Validators.compose([Validators.minLength(0), Validators.maxLength(255), Validators.required])],
       from: [this.pulseItem.surgery.doctorEmail, Validators.compose([Validators.minLength(0), Validators.maxLength(255), Validators.required])],
       message: ['', Validators.compose([Validators.minLength(0), Validators.maxLength(255), Validators.required])]
     });
@@ -47,7 +47,7 @@ export class BillingDetails {
     let d = new Date(this.surgery.term);
 
     var helper = require('sendgrid').mail;
-
+console.log('Mail Form', this.mailForm);
     var from_email = new helper.Email(this.surgery.doctorEmail);
     var to_email = new helper.Email(this.surgery.billingCoordinatorEmail);
     //     var from_email = new helper.Email('raphael@surgipal.com');
@@ -57,8 +57,8 @@ export class BillingDetails {
       'text/html', 'I\'m replacing the <strong>body tag</strong>');
     var mail = new helper.Mail(from_email, subject, to_email, content);
     var personalization = mail.getPersonalizations();
-    personalization[0].addCustomArg(new helper.CustomArgs('-surgeon-', 'Me Surgeon'));
-    personalization[0].addSubstitution(new helper.Substitution('-patient-', 'Me Patient'));
+    // personalization[0].addCustomArg(new helper.CustomArgs('-surgeon-', 'Me Surgeon'));
+    // personalization[0].addSubstitution(new helper.Substitution('-patient-', 'Me Patient'));
 
     //     personalization[0].addSubstitution(new helper.Substitution('-surgeon-',this.surgery.firstName + ' ' + this.surgery.lastName));
     //     personalization[0].addSubstitution(new helper.Substitution('-patient-', this.surgery.initials));
@@ -85,17 +85,19 @@ export class BillingDetails {
     //With promise
     sg.API(request)
       .then(response => {
-        this._events.publish('email:billing', this.surgery.billingCoordinatorEmail);
+        this._events.publish('email:billing', this.surgery);
         console.log(response.statusCode);
         console.log(response.body);
         console.log(response.headers);
+                   console.groupEnd();
                  this.hockeyapp.trackEvent('Send Email Sucess!' + response.toJson());
       })
       .catch(error => {
+            console.groupEnd();
         //error is an instance of SendGridError
         //The full response is attached to error.response
           this.hockeyapp.trackEvent('Send Email Response Error' + error.toString());
-        console.log(error.response.statusCode);
+        console.error(error.response.statusCode);
       });
 
 
@@ -113,7 +115,9 @@ export class BillingDetails {
         }
     catch(e)
     { 
+      console.error(e);
     this.hockeyapp.trackEvent('Send Email Error');
+       console.groupEnd();
     }
     this.dismiss();
   }

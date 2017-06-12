@@ -24,7 +24,7 @@ import { PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails, SurgeryData 
 import { MessageListPage, MessageReplyModal, MessageData, MessageDetailPage } from "../pages/message/index";
 import { AuthService, NotifyService, LoggerService } from "../shared/index";
 import { HockeyApp } from 'ionic-hockeyapp';
-import { FutureData, FuturePulsePage } from "../pages/future/index";
+ 
 //TEST, FutureData
 
 let storage = new Storage();
@@ -72,8 +72,7 @@ export function debounce(func, wait, immediate) {
         PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails,
         MessageListPage, MessageDetailPage, MessageReplyModal,
         CalendarPage,
-        TabsPage,
-FuturePulsePage
+        TabsPage 
     ],
     imports: [AppInsightsModule,
         BrowserModule, HttpModule, MomentModule,
@@ -90,8 +89,7 @@ FuturePulsePage
         PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails,
         MessageListPage, MessageDetailPage, MessageReplyModal,
         CalendarPage,
-        TabsPage,
-        FuturePulsePage
+        TabsPage 
     ],
     providers: [
         AuthService,
@@ -105,8 +103,7 @@ FuturePulsePage
             HockeyApp,
         NotifyService,
         SurgeryData,
-        MessageData,
-        FutureData,
+        MessageData, 
         LoggerService,
         MessageService
         

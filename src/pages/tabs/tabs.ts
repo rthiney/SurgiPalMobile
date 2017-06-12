@@ -1,8 +1,8 @@
-import { CalendarPage } from './../calendar/calendar';
-import { PageInterface } from '../../app/app.component';
 
 import { Component } from '@angular/core';
 import { NavParams, Platform, Events, LoadingController } from 'ionic-angular';
+import { CalendarPage } from '../calendar/calendar';
+import { PageInterface } from '../../app/app.component';
 
 import { HomePage } from '../home/home';
 import { AboutPage } from '../about/about';
@@ -10,8 +10,7 @@ import { ContactPage } from '../contact/contact';
 import { AccountPage } from "../account/account";
 import { PulsePage, SurgeryData } from "../pulse/index";
 import { MessageListPage, MessageData, MessageService } from "../message/index";
-import { FuturePulsePage } from "../future/index";
-
+ 
 @Component({
   templateUrl: 'tabs.html'
 })
@@ -24,7 +23,7 @@ export class TabsPage {
   // should be each tab's root Page
   loading: any;
   tab1Root: any = PulsePage;
-  tab2Root: any = FuturePulsePage;
+  tab2Root: any =CalendarPage;
   tab3Root: any = MessageListPage;
   tab4Root: any = AccountPage; 
   tab5Root: any = AboutPage;
@@ -35,10 +34,12 @@ export class TabsPage {
   futureData: number = 0;
   mySelectedIndex: number;
   isAndroid: boolean = false;
-  constructor(navParams: NavParams, platform: Platform, public events: Events, public surgerySvc: SurgeryData, public messageSvc: MessageData) {
+  constructor(navParams: NavParams, platform: Platform, public events: Events, private surgerySvc: SurgeryData, private messageSvc: MessageData) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
     this.isAndroid = platform.is('android');
-
+    // this.pulseData = surgerySvc.metrics.today;
+    // this.futureData = surgerySvc.metrics.future;
+    // this.messageData = messageSvc.metrics.unread;
   }
   ionViewDidLoad() {
     this.loadListeners(); 
@@ -56,13 +57,17 @@ export class TabsPage {
     //   this.messageData = metrics.unread
     // });
     this.events.subscribe('message:metrics', (metrics) => { 
-      console.log('MESSAGE METRICS EVENT ', metrics)
+ console.group('Events');
+      console.log('MESSAGE METRICS EVENT CAPTURED TABS PAGE ', metrics)
       this.messageData = metrics.unread 
+      console.groupEnd();
     });
     this.events.subscribe('surgery:metrics', (metrics) => {
-      console.log('SURGERY METRICS EVENT  ', metrics)
+       console.group('Events');
+      console.log('SURGERY METRICS EVENT CAPTURED TABS PAGE  ', metrics)
       this.pulseData = metrics.today;
-      this.futureData = metrics.pending;
+      this.futureData = metrics.future;
+         console.groupEnd();
       //  this.appPages[0].badgeValue = metrics.today;
       //this.appPages[2].badgeValue = metrics.pending;
 
@@ -71,4 +76,4 @@ export class TabsPage {
 
   }
 
-}
+} 

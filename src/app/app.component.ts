@@ -6,8 +6,7 @@ import { Component, ViewChild } from '@angular/core';
 //import { StatsPage } from './../pages/stats/stats';
 import { SurgeryMetrics, MessageMetrics } from './../models/metrics';
 import { MessageData, MessageListPage } from './../pages/message/index';
-import { SurgeryData, PulsePage } from './../pages/pulse/index';
-import { FuturePulsePage, FutureData } from './../pages/future/index';
+import { SurgeryData, PulsePage } from './../pages/pulse/index'; 
 
 import { AzureMobile } from './../shared/app.constants';
 
@@ -20,8 +19,9 @@ import { SupportPage } from '../pages/support/support';
 import { AuthService, LoggerService, NotifyService } from "../shared/index";
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { HockeyApp } from 'ionic-hockeyapp';
+import { CalendarPage } from "../pages/calendar/calendar";
 
-//declare var WindowsAzure: any; 
+//declare var WindowsAzure: any;
 // ar client = new WindowsAzure.MobileServiceClient(AzureMobile.url);
 export interface PageInterface {
     title: string;
@@ -56,11 +56,11 @@ export class SurgiPalApp {
     // the login page disables the left menu
     appPages: PageInterface[] = [
 
-        { title: 'Today', component: TabsPage, tabComponent: PulsePage, icon: 'pulse', index: 0, badgeValue: 0, color: 'dark' },
-        { title: 'Calendar', component: TabsPage, tabComponent: FuturePulsePage, index: 1, icon: 'calendar', badgeValue: 0, color: 'dark' },
-        { title: 'Messages', component: TabsPage, tabComponent: MessageListPage, index: 2, icon: 'mail', badgeValue: 0, color: 'dark' },
-        { title: 'Stats', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 3, badgeValue: 0, color: 'dark' },
-        { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 4, icon: 'information-circle', badgeValue: 0, color: 'dark' }
+        { title: 'Today', component: TabsPage, tabComponent: PulsePage, icon: 'pulse', index: 0, badgeValue: 0, color: 'favorite' },
+        { title: 'Calendar', component: TabsPage, tabComponent: CalendarPage, index: 1, icon: 'calendar', badgeValue: 0, color: 'favorite' },
+        { title: 'Messages', component: TabsPage, tabComponent: MessageListPage, index: 2, icon: 'mail', badgeValue: 0, color: 'favorite' },
+        { title: 'Stats', component: TabsPage, tabComponent: AccountPage, icon: 'stats', index: 3, badgeValue: -1, color: 'dark' },
+        { title: 'About', component: TabsPage, tabComponent: AboutPage, index: 4, icon: 'information-circle', badgeValue: -1, color: 'dark' }
 
         // { title: 'Stats', component: TabsPage, tabComponent: StatsPage, index: 2, icon: 'stats' }
     ];
@@ -96,7 +96,7 @@ export class SurgiPalApp {
         platform.ready().then(() => {
 
             this.hockeyapp = _hockeyapp;
-            this.rootPage = AboutPage;;
+            this.rootPage = AboutPage;
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             StatusBar.styleDefault();
@@ -231,12 +231,12 @@ export class SurgiPalApp {
         //     this.messageMetrics = metrics;
         //     this.getSurgeryData();
         // });
-        this.events.subscribe('surgery:metrics', (metrics) => {
-            console.log('SURGERY METRICS EVENT  ', metrics)
-            this.appPages[0].badgeValue = metrics.today;
-            this.appPages[1].badgeValue = metrics.pending;
-            this.surgeryMetrics = metrics;
-        });
+        // this.events.subscribe('surgery:metrics', (metrics) => {
+        //     console.log('SURGERY METRICS EVENT  ', metrics)
+        //     this.appPages[0].badgeValue = metrics.today;
+        //     this.appPages[1].badgeValue = metrics.pending;
+        //     this.surgeryMetrics = metrics;
+        // });
         console.groupEnd();
     }
     getMessageData() {
@@ -258,7 +258,7 @@ export class SurgiPalApp {
         console.log('Getting SurgeryData Background');
         this.surgerySvc.getMetrics().subscribe((data: any) => {
             this.appPages[0].badgeValue = data.today;
-            this.appPages[1].badgeValue = data.pending;
+            this.appPages[1].badgeValue = data.future;
         },
             err => {
                 console.log(err);
@@ -266,7 +266,7 @@ export class SurgiPalApp {
             () => {
                 console.log('SurgeryData Background completed');
             });
-
+    console.groupEnd();
     }
     enableMenu(loggedIn: boolean) {
         this.menu.enable(loggedIn, 'loggedInMenu');

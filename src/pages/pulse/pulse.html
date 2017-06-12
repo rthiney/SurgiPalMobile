@@ -3,26 +3,27 @@
         <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-        <ion-title>{{ title}}</ion-title>
-        <ion-segment [(ngModel)]="segment" (ionChange)="updateSegment()">
-            <ion-segment-button value="today">
-                Today
-            </ion-segment-button>
-            <ion-segment-button value="future">
-                Future
-            </ion-segment-button>
-            <ion-segment-button value="past">
-                Past
-            </ion-segment-button>
-        </ion-segment>
-
-
+        <ion-title>{{ title }}</ion-title>
     </ion-navbar>
 
-    <!--<ion-toolbar no-border-top>
-        <ion-searchbar color="primary" [(ngModel)]="queryText" (ionInput)="updateSchedule()" placeholder="Search">
-        </ion-searchbar>
-    </ion-toolbar>-->
+    <ion-toolbar no-border-top>
+        <div padding>
+            <ion-segment [(ngModel)]="segment" (ionChange)="updateSegment()">
+                <ion-segment-button value="today">
+                    Today
+                    <ion-badge color="favorite" item-right>{{metrics?.today}} </ion-badge>
+                </ion-segment-button>
+                <ion-segment-button value="future">
+                    Future
+                    <ion-badge color="favorite" item-right>{{metrics?.future}} </ion-badge>
+                </ion-segment-button>
+                <ion-segment-button value="past">
+                    Past
+                    <ion-badge color="favorite" item-right>{{metrics?.past}} </ion-badge>
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -42,11 +43,11 @@
  
     </ion-item-group>
  -->
-    <div [ngSwitch]="segment" padding class="about-info">
+    <div [ngSwitch]="segment" padding>
 
         <ion-list #surgeryList *ngSwitchCase="'future'">
 
-            <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
+            <ion-item-group *ngFor="let group of groups" [hidden]="group.surgeries==0">
 
                 <ion-item-divider sticky>
                     <ion-label>
@@ -98,8 +99,6 @@
     <h2>Cancel</h2>
     <p>Cancel surgery and remove from this list!</p>
   </button>
-
-
                         </ion-list>
                     </ion-card-content>
                 </ion-card>
@@ -107,7 +106,7 @@
 
             </ion-item-group>
         </ion-list>
-        <ion-list-header [hidden]="showSurgeries > 0" *ngSwitchCase="'future'">
+        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'future'">
             No Scheduled Surgeries in the future..
         </ion-list-header>
 
@@ -117,34 +116,27 @@
 
 
         <ion-list #surgeryList *ngSwitchCase="'today'">
-            <ion-card *ngFor="let s of surgeries;   let i = index;" #slidingItem>
+            <ion-card *ngFor="let s of todaySurgeries;   let i = index;" #cardItem>
                 <img src="assets/img/rooms/s{{i+1}}.PNG" />
                 <div class="card-title">{{s.surgery.initials | uppercase}}</div>
                 <div class="card-subtitle">{{s.surgery.patient}}</div>
-
-
-
-
-
                 <ion-list>
                     <ion-item-sliding>
-                        <ion-item (click)="showDetail(s.surgery)">
+                        <ion-item border lines (click)="showDetail(s.surgery)">
                             <ion-avatar item-left>
                                 <img [src]="s.surgery.doctorImage" />
                             </ion-avatar>
-                            <h2>{{s.surgery.initials}}</h2>
-                            <h2>{{s.surgery.patient}}</h2>
-                            <h2>{{s.surgery.admissionStatus}}</h2>
-                            <ion-note>
-                                Duration: {{s.surgery.surgeryTime}} <br><i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></ion-note>
 
-
+                            <h1> {{s.surgery.initials | uppercase }} </h1>
+                            <h2><strong>Surgery:</strong><i> {{s.surgery.patient}}</i></h2>
+                            <h2><strong>Status:</strong><i>: {{s.surgery.admissionStatus}}</i></h2>
+                            <ion-note item-right><i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} <br><strong> Duration</strong>: {{s.surgery.surgeryTime}} </i></ion-note>
                         </ion-item>
+
                         <ion-item-options side="left">
                             <button ion-button color='favorite' (click)="sendBilling(s)">
-    <ion-icon name="cash" item-left   ></ion-icon>
-     Bill
- 
+    <ion-icon name="cash" item-left  small ></ion-icon>
+     Billing 
       </button>
                             <button ion-button color="google" (click)="cancelSurgery(s)"> 
      <ion-icon name="close-circle" item-left small ></ion-icon>
@@ -152,67 +144,46 @@
       </button>
                         </ion-item-options>
                         <ion-item-options side="right">
-                            <button ion-button color="light" (click)="showEditCodes(s,'CPT')">
+                            <button ion-button color="primary" (click)="showEditCodes(s,'CPT')">
         <ion-icon name="barcode"></ion-icon>
         CPT
       </button>
-                            <button ion-button color="light" (click)="showEditCodes(s,'DX')">
+                            <button ion-button color="primary" (click)="showEditCodes(s,'DX')">
         <ion-icon name="barcode"></ion-icon>
-        DX
+        DX 
       </button>
                         </ion-item-options>
                     </ion-item-sliding>
                 </ion-list>
 
 
-
-
-
-
                 <ion-card-content>
 
-                    <ion-list border>
-
-
-                        <button ion-item (click)="showEditCodes(s.surgery,'CPT')">
-    <ion-icon name="barcode" item-left small></ion-icon>
+                    <ion-list inset>
+                        <ion-item-divider color="light" small>Actions</ion-item-divider>
+                        <button ion-item (click)="showEditCodes(s,'CPT')">
+    <ion-icon name="barcode" item-left large color="primary"></ion-icon>
     <h2>CPT Codes</h2>
     <p>{{s.surgery.cpt}}</p>
-    
+     <ion-note item-right>{{s.cptArray.length}} codes</ion-note>
   </button>
 
-                        <button ion-item (click)="showEditCodes(s.surgery,'DX')">
-    <ion-icon name="barcode" item-left small></ion-icon>
+                        <button ion-item (click)="showEditCodes(s,'DX')">
+    <ion-icon name="barcode" item-left  large color="primary"></ion-icon>
     <h2>DX Codes</h2>
     <p>{{s.surgery.diagnosisCode}}</p>
+ <ion-note item-right>{{s.dxArray.length}} codes</ion-note>
   </button>
-
-
-
-                        <ion-item>
-                            <ion-icon name="cash" item-left small></ion-icon>
-                            <h2>Bill</h2>
-                            <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
-                            <button ion-button clear item-end (click)="sendBilling(s.surgery)">Bull</button>
-                        </ion-item>
-
-
-                        <ion-item>
-                            <h2>Bill</h2>
-                            <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
-                            <button ion-button clear item-end (click)="sendBilling(s.surgery)">  <ion-icon name="cash" item-left small></ion-icon></button>
-                        </ion-item>
-
-                        <ion-item-divider color="light">Other</ion-item-divider>
-                        <button ion-item small color="favorite" (click)="sendBilling(s.surgery)">
-    <ion-icon name="cash" item-left small ></ion-icon>
-    <h2>Bill</h2> 
-    <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p> 
+                        <button ion-item (click)="sendBilling(s)">
+    <ion-icon name="cash" item-left  large color="favorite"></ion-icon>
+    <h2>Billing</h2>
+   <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
+      <ion-note item-right>{{ s.surgery.billingCoordinatorEmail }}</ion-note>
   </button>
-                        <button ion-item small color="danger" (click)="cancelSurgery(s.surgery,slidingItem)">
-    <ion-icon name="close-circle" item-left small></ion-icon>
+                        <button ion-item (click)="cancelSurgery(s,cardItem)">
+    <ion-icon name="close-circle" item-left  large color="danger"></ion-icon>
     <h2>Cancel</h2>
-    <p>Cancel surgery and remove from this list!</p>
+  <p>Cancel surgery and remove from this list!</p> 
   </button>
 
 
@@ -220,8 +191,8 @@
                 </ion-card-content>
             </ion-card>
         </ion-list>
-        <ion-list-header [hidden]="surgeries > 0" *ngSwitchCase="'today'">
-            No Surgeries today {{ todaySurgeries | json}}
+        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'today'">
+            <p> No Surgeries Today :( </p>
         </ion-list-header>
 
 
@@ -243,121 +214,20 @@
 
 
         <ion-list #surgeryList *ngSwitchCase="'past'">
-            <ion-card *ngFor="let s of surgeries;   let i = index;" #slidingItem>
-                <img src="assets/img/rooms/s{{i+1}}.PNG" />
-                <div class="card-title">{{s.surgery.initials | uppercase}}</div>
-                <div class="card-subtitle">{{s.surgery.patient}}</div>
-
-
-                <ion-item (click)="loadDetail(s.surgery)">
+            <ion-card *ngFor="let s of pastSurgeries;   let i = index;" #slidingItem>
+                <ion-item (click)="showDetail(s.surgery)">
                     <ion-avatar item-left>
                         <img [src]="s.surgery.doctorImage" />
                     </ion-avatar>
-                    <h2>{{s.surgery.initials}}</h2>
-                    <h2>{{s.surgery.patient}}</h2>
-                    <h2>{{s.surgery.admissionStatus}}</h2>
-                    <p> Duration: {{s.surgery.surgeryTime}}</p>
-                    <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
-
+                    <h2><strong>Patient:</strong><i>{{s.surgery.initials}}</i></h2>
+                    <h2><strong>Surgery:</strong><i> {{s.surgery.patient}}</i></h2>
+                    <h2><strong>Status:</strong><i>: {{s.surgery.admissionStatus}}</i></h2>
+                    <ion-note item-right><i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} <br><strong> Duration</strong>: {{s.surgery.surgeryTime}} </i></ion-note>
                 </ion-item>
 
-
-
-                <ion-list>
-                    <ion-item-sliding>
-                        <ion-item>
-                            <ion-avatar item-left>
-                                <img [src]="s.surgery.doctorImage" />
-                            </ion-avatar>
-                            <h2>{{s.surgery.initials}}</h2>
-                            <h2>{{s.surgery.patient}}</h2>
-                            <h2>{{s.surgery.admissionStatus}}</h2>
-                            <ion-note>
-                                Duration: {{s.surgery.surgeryTime}} </ion-note>
-                            <p> <i> {{s.surgery.term | date:'shortDate'}} at  {{s.surgery.term | date:'shortTime'}} </i></p>
-
-                        </ion-item>
-                        <ion-item-options side="left">
-                            <button ion-button color='light' (click)="sendBilling(s.surgery)">
-    <ion-icon name="cash" item-left   ></ion-icon>
-     Bill
- 
-      </button>
-                            <button ion-button color="google" (click)="sendBilling(s.surgery)"> 
-     <ion-icon name="close-circle" item-left small ></ion-icon>
-     Cancel
-      </button>
-                        </ion-item-options>
-                        <ion-item-options side="right">
-                            <button ion-button color="light" (click)="showEditCodes(s.surgery,'CPT')">
-        <ion-icon name="barcode"></ion-icon>
-        CPT
-      </button>
-                            <button ion-button color="light" (click)="showEditCodes(s.surgery,'DX')">
-        <ion-icon name="barcode"></ion-icon>
-        DX
-      </button>
-                        </ion-item-options>
-                    </ion-item-sliding>
-                </ion-list>
-
-
-
-
-
-
-                <ion-card-content>
-
-                    <ion-list border>
-
-
-                        <button ion-item (click)="showEditCodes(s.surgery,'CPT')">
-    <ion-icon name="barcode" item-left small></ion-icon>
-    <h2>CPT Codes</h2>
-    <p>{{s.surgery.cpt}}</p>
-    
-  </button>
-
-                        <button ion-item (click)="showEditCodes(s.surgery,'DX')">
-    <ion-icon name="barcode" item-left small></ion-icon>
-    <h2>DX Codes</h2>
-    <p>{{s.surgery.diagnosisCode}}</p>
-  </button>
-
-
-
-                        <ion-item>
-                            <ion-icon name="cash" item-left small></ion-icon>
-                            <h2>Bill</h2>
-                            <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
-                            <button ion-button clear item-end (click)="sendBilling(s.surgery)">Bull</button>
-                        </ion-item>
-
-
-                        <ion-item>
-                            <h2>Bill</h2>
-                            <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p>
-                            <button ion-button clear item-end (click)="sendBilling(s.surgery)">  <ion-icon name="cash" item-left small></ion-icon></button>
-                        </ion-item>
-
-
-                        <button ion-item small color="favorite" (click)="sendBilling(s.surgery)">
-    <ion-icon name="cash" item-left small ></ion-icon>
-    <h2>Bill</h2> 
-    <p>Send billing information to <b>{{s.surgery.billingCoordinatorName}}</b></p> 
-  </button>
-                        <button ion-item small color="danger" (click)="cancelSurgery(s.surgery,slidingItem)">
-    <ion-icon name="close-circle" item-left small></ion-icon>
-    <h2>Cancel</h2>
-    <p>Cancel surgery and remove from this list!</p>
-  </button>
-
-
-                    </ion-list>
-                </ion-card-content>
             </ion-card>
         </ion-list>
-        <ion-list-header [hidden]="surgeries > 0" *ngSwitchCase="'past'">
+        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'past'">
             No Past Surgeries
         </ion-list-header>
     </div>

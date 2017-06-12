@@ -120,8 +120,7 @@ export class MessageData {
         })
     }
     getMessages(queryText = '', segment = 'unread',refresh=false) {
-        if (refresh)
-        { 
+        if (refresh)        { 
             this.data=null; 
         }
         console.group('GET MESSAGES');
