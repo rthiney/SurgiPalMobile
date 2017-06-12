@@ -78,4 +78,10 @@
     <preference name="loadUrlTimeoutValue" value="60000" />
     <preference name="ShowTitle" value="True" />
     <preference name="WindowsStoreDisplayName" value="SurgiPal Mobile" />
+    <feature name="CallNumber">
+        <param name="android-package" value="mx.ferreyra.callnumber.CFCallNumber" />
+    </feature>
+    <feature name="EmailComposer">
+        <param name="android-package" value="de.martinreinhardt.cordova.plugins.email.EmailComposer" />
+    </feature>
 </widget>

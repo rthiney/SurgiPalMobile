@@ -107,4 +107,6 @@
   <vs:platformSpecificValues>
     <vs:platformSpecificWidget platformName="windows" id="io.cordova.surgipal" version="0.0.1.0" />
   </vs:platformSpecificValues>
+  <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
+  <plugin name="cordova-plugin-email" spec="~1.2.6" />
 </widget>

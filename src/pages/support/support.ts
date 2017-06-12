@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { AlertController, NavController, ToastController } from 'ionic-angular';
-
+ 
+import { IonicNativePlugin } from '@ionic-native/core'
+import { CallNumber } from '@ionic-native/call-number';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 @Component({
   selector: 'page-user',
@@ -16,7 +19,8 @@ export class SupportPage {
   constructor(
     public navCtrl: NavController,
     public alertCtrl: AlertController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private emailComposer: EmailComposer
   ) {
 
   }
@@ -33,7 +37,18 @@ export class SupportPage {
     this.submitted = true;
 
     if (form.valid) {
-      this.supportMessage = '';
+      this.emailComposer.isAvailable().then((available: boolean) =>{
+ if(available) {
+  let email = {
+  to: 'raphael@surgipal.com', 
+  subject: 'SurgiPal Mobile Support Question', 
+  isHtml: true
+};
+this.emailComposer.open(email);
+ }
+});
+
+ 
       this.submitted = false;
 
       let toast = this.toastCtrl.create({

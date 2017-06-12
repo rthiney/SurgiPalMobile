@@ -7,9 +7,11 @@ import { BillingDetails, CodeDetails, SurgeryData, SurgeryDetailPage } from './i
 import { PulseViewModel } from './../../models/viewmodels/pulse_model';
 import { AuthHttp } from 'angular2-jwt';
 import { Pulse } from './../../models/pulse';
-
 import { AuthService, NotifyService, LoggerService, CONFIGURATION } from "../../shared/index";
 
+import { IonicNativePlugin } from '@ionic-native/core'
+import { CallNumber } from '@ionic-native/call-number';
+import { EmailComposer } from '@ionic-native/email-composer';
 @Component({
   selector: 'page-pulse',
   templateUrl: 'pulse.html'
@@ -38,7 +40,7 @@ export class PulsePage {
   date: Date;
   dateIndex: number = 0;
   segment: string = "today";
-   metrics:SurgeryMetrics;
+  metrics: SurgeryMetrics;
   private headers = new Headers({ 'Content-Type': 'application/json' });
   constructor(
     private authHttp: AuthHttp,
@@ -49,7 +51,9 @@ export class PulsePage {
     private surgeryData: SurgeryData,
     public note: NotifyService,
     public log: LoggerService,
-    public events: Events
+    public events: Events,
+    private callNumber: CallNumber,
+    private emailComposer: EmailComposer
   ) {
     this.date = new Date();
   }
@@ -58,19 +62,37 @@ export class PulsePage {
 
     // this.insight.trackPageView('Pulse');
     this.app.setTitle('Todays Pulse');
-    this.metrics=this.surgeryData.metrics;
+    this.metrics = this.surgeryData.metrics;
     console.log('FOSID', this.auth.fosId);
     if (this.auth.fosId !== undefined)
       this.updateSchedule();
     this.loadWatchers();
   }
   loadWatchers() {
-    this.events.subscribe('email:billing', (data:PulseViewModel, ) => {
+    this.events.subscribe('email:billing', (data: PulseViewModel, ) => {
       this.activeElement.remove();
       this.note.presentToast('Success', 'Billing email sent to ' + data.billingCoordinatorEmail);
     });
   }
+  callPhoneNumber(p: any) {
+    this.callNumber.callNumber(p, true)
+      .then(() => console.log('Launched dialer!'))
+      .catch(() =>this.note.presentError('Error launching dialer'));
+  }
+  callComposeEmail(addy: string, p: PulseViewModel) {
+    this.emailComposer.isAvailable().then((available: boolean) => {
+      if (available) {
+        let email = {
+          to: addy,
+          subject: 'SurgiPal Mobile regarding ' + p.initials,
+          body: 'Dear ' + p.coordinatorName + ',',
+          isHtml: true
+        };
+        this.emailComposer.open(email); 
+      }
+    }).catch(()=>  this.note.presentError('Error launching emailer'));
 
+  }
   // backDate() {
   //   this.dateIndex--;
   //   this.date.setDate(this.date.getDate() + this.dateIndex);
@@ -89,41 +111,41 @@ export class PulsePage {
   updateSegment() {
     console.group('updateSegment');
     console.log('segment=' + this.segment);
-    
+
     if (this.segment == 'today') {
       this.shownSurgeries = this.surgeryData.metrics.today;
-  
- this.title = 'Today\'s Pulse ('+this.date.toLocaleDateString() +')';
+
+      this.title = 'Today\'s Pulse (' + this.date.toLocaleDateString() + ')';
     }
     if (this.segment == 'past') {
       this.app.setTitle('Past Surgeries');
       this.shownSurgeries = this.surgeryData.metrics.past;
-  
-  this.title = 'Past Surgeries';
+
+      this.title = 'Past Surgeries';
     }
     if (this.segment == 'future') {
       this.app.setTitle('Future Surgeries');
       this.shownSurgeries = this.surgeryData.metrics.future;
- 
+
       this.title = 'Future Surgeries';
     }
-     console.log('this.shownSurgeries',      this.shownSurgeries);
-      console.log('this.surgeries',      this.surgeries);
-      console.groupEnd();
+    console.log('this.shownSurgeries', this.shownSurgeries);
+    console.log('this.surgeries', this.surgeries);
+    console.groupEnd();
   }
-  updateSchedule(  reset: boolean = false, refresher: any = null) {
+  updateSchedule(reset: boolean = false, refresher: any = null) {
     console.group('updateSchedule');
-    console.log('passed in reset=' + reset );
+    console.log('passed in reset=' + reset);
     let cntl = this.note.presentLoading('Loading Surgeries...');
     // Close any open sliding items when the schedule updates
     this.surgeryList && this.surgeryList.closeSlidingItems();
 
     this.surgeryData.getSurgeries(this.queryText, this.excludeTracks, this.segment, reset).subscribe((data: any) => {
- 
+
       console.log('getSurgeries return', data);
       this.shownSurgeries = data.shownSurgeries;
       this.todaySurgeries = this.surgeryData.data.todaySurgeries;
-      this.pastSurgeries = this.surgeryData.data.pastSurgeries; 
+      this.pastSurgeries = this.surgeryData.data.pastSurgeries;
       this.groups = data;
 
       if (refresher)
@@ -238,10 +260,10 @@ export class PulsePage {
   showDetail(s: PulseViewModel) {
     // go to the session detail page
     // and pass in the session data 
-        this.selectedPulse = s; 
+    this.selectedPulse = s;
     this.navCtrl.push(SurgeryDetailPage, s);
   }
- 
+
 
   openSocial(network: string, fab: FabContainer) {
     let loading = this.note.loadingCtrl.create({
@@ -254,15 +276,15 @@ export class PulsePage {
     loading.present();
   }
   loadDetail(p: PulseViewModel) {
-    this.selectedPulse = p; 
+    this.selectedPulse = p;
   }
 
   cancelSurgery(pulse: any, p: Element) {
-    pulse.hide=true; 
+    pulse.hide = true;
     this.activeElement = p;
-  this.surgeryData.metrics.today--;
+    this.surgeryData.metrics.today--;
     p.remove();
-    this.note.presentToast('Cancel','Surgery has been cancelled.');
+    this.note.presentToast('Cancel', 'Surgery has been cancelled.');
   }
 
   sendBilling(p: any) {
@@ -306,5 +328,5 @@ export class PulsePage {
     });
 
   }
- 
+
 }

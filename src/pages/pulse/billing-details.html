@@ -21,70 +21,62 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>
-            Reply
+            Billing Information for {{ surgery.initials }}
         </ion-title>
-        
-        
-        
         <ion-buttons start>
             <button ion-button (click)="dismiss()"> 
         <ion-icon name="close"  ></ion-icon>
       </button>
-         
         </ion-buttons>
-         <ion-buttons end>
-            <button ion-button (click)=" sendEmail() "> 
-        <ion-icon name="send"  ></ion-icon>
-      </button>
-         
-        </ion-buttons>
-   
- 
     </ion-toolbar>
 </ion-header>
 
 
 
 <ion-content padding class="sample-modal-page">
-    <div> Here the billing information for <strong>{{ surgery.initials}}</strong> on <strong>  {{surgery.term | date:'shortDate'}}</strong></div>
- 
-        <ion-list no-lines>
-           <ion-item>
-               <h2>CPT Codes</h2>
-                <p>{{ surgery.cpt}}</p>
 
-               </ion-item>
-         <ion-item>
-               <h2>DX Codes</h2>
-                <p>{{ surgery.diagnosisCode}}</p>
+    <ion-list no-lines>
+        <ion-item-divider color="light" small>Billing information for <strong>{{ surgery.initials}}</strong> on <strong>  {{surgery.term | date:'shortDate'}}</strong></ion-item-divider>
+        <ion-item>
+            <h2>CPT Codes</h2>
+            <p>{{ surgery.cpt}}</p>
+        </ion-item>
+        <ion-item>
+            <h2>DX Codes</h2>
+            <p>{{ surgery.diagnosisCode}}</p>
+        </ion-item>
+        <!--(ngSubmit)="sendEmail()"-->
+        <form [formGroup]="mailForm">
 
-               </ion-item>              
-       <!--(ngSubmit)="sendEmail()"-->
-  <form [formGroup]="mailForm" > 
-
-      <ion-item>
-          <ion-label floating>From</ion-label>
-          <ion-input formControlName="from"  required></ion-input>
-      </ion-item> 
-      <ion-item>
-          <ion-label floating>To</ion-label>
-          <ion-input formControlName="to"   required></ion-input>
-      </ion-item> 
+            <ion-item>
+                <ion-label floating>From</ion-label>
+                <ion-input formControlName="from" required></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>To</ion-label>
+                <ion-input formControlName="to" required></ion-input>
+            </ion-item>
 
 
             <ion-item>
-                <ion-label floating >Message</ion-label>
+                <ion-label floating>Message</ion-label>
                 <ion-textarea formControlName="message" rows="6" required></ion-textarea>
-            </ion-item> 
+                <ion-note>
+                    <p color="danger" *ngIf="!mailForm.controls.message.valid">
+                        Not a valid message.
+                    </p>
+                </ion-note>
+            </ion-item>
 
-        <p color="danger" *ngIf="!mailForm.controls.message.valid">
-            Not a valid message.
-        </p>
+            <button ion-button (click)=" sendEmail()" color="primary">
+    <ion-icon name="send" item-left  large color="primary"></ion-icon>
+Send 
+  </button>
 
-        <div padding>
-            <button ion-button block type="button" color="primary" (click)="sendEmail()" > <ion-icon name="send"></ion-icon>Send</button>
-        </div>
-    </form>
- 
-        </ion-list>
+            <!--<div padding>
+                <button ion-button block type="button" color="primary" (click)="sendEmail()"> <ion-icon name="send"></ion-icon>Send</button>
+            </div>-->
+        </form>
+
+    </ion-list>
 </ion-content>

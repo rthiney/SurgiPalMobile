@@ -78,5 +78,21 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "mx.ferreyra.callnumber": {
+        "source": {
+            "type": "registry",
+            "id": "call-number"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-email": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-email"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

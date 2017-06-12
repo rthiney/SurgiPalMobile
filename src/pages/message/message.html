@@ -47,10 +47,15 @@
 
         <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
 
-            <ion-item-divider sticky>
+            <ion-item-divider sticky color="light">
                 <ion-label>
                     {{group.d}}
                 </ion-label>
+
+                <button *ngIf="group.messages.length>1" ion-button item-right color="light" (click)="deleteGroup(group)">
+        <ion-icon  name="trash" color="danger"> </ion-icon>
+          {{group.messages.length}} Messages
+      </button>
             </ion-item-divider>
 
 
@@ -61,17 +66,20 @@
                     </ion-avatar>
                     <h2>{{m.message.subject}} </h2>
                     <h3>{{m.message.message}}</h3>
-                    <ion-note item-right> {{m.message.createdAt | date:'longDate' }} at {{m.message.createdAt | date:'shortTime' }} <i>( {{m.message.createdAt | amTimeAgo}}) </i> </ion-note>
+                    <ion-note item-right> {{m.message.createdAt | date:'longDate' }} at {{m.message.createdAt | date:'shortTime' }} <i>( {{m.message.createdAt | amTimeAgo}}) </i>
+
+                    </ion-note>
+                    <button ion-button item-right color="light" (click)="delete(m.message)">
+        <ion-icon  name="trash" color="danger"> </ion-icon>
+          
+      </button>
                 </ion-item>
                 <ion-item-options side="left">
                     <button ion-button color="danger" (click)="delete(m.message)">
         <ion-icon name="trash"></ion-icon>
         Delete
-      </button>delete
-                    <!--<button ion-button color="secondary">
-        <ion-icon name="call"></ion-icon>
-        Call
-      </button>-->
+      </button>
+
                 </ion-item-options>
                 <ion-item-options side="right">
                     <button ion-button color="primary" (click)="reply(m.message)">

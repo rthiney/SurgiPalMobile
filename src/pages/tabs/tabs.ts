@@ -10,7 +10,9 @@ import { ContactPage } from '../contact/contact';
 import { AccountPage } from "../account/account";
 import { PulsePage, SurgeryData } from "../pulse/index";
 import { MessageListPage, MessageData, MessageService } from "../message/index";
- 
+ import { IonicNativePlugin } from '@ionic-native/core'
+import { CallNumber } from '@ionic-native/call-number';
+import { EmailComposer } from '@ionic-native/email-composer';
 @Component({
   templateUrl: 'tabs.html'
 })
@@ -34,7 +36,7 @@ export class TabsPage {
   futureData: number = 0;
   mySelectedIndex: number;
   isAndroid: boolean = false;
-  constructor(navParams: NavParams, platform: Platform, public events: Events, private surgerySvc: SurgeryData, private messageSvc: MessageData) {
+  constructor(navParams: NavParams, platform: Platform, public events: Events, private surgerySvc: SurgeryData, private messageSvc: MessageData,   private callNumber: CallNumber) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
     this.isAndroid = platform.is('android');
     // this.pulseData = surgerySvc.metrics.today;

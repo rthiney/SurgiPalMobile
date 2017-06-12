@@ -48,6 +48,7 @@ export class MessageData {
        this.data.metrics.read=0;
              this.data.metrics.unread=0;
         let currentMessages = [];
+         this.groupedMessages = [];
         // loop through each message
         this.data.forEach((message: DoctorMessageModel) => {
 

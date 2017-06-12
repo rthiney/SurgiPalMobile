@@ -39,6 +39,14 @@
                         {
                             "xml": "<feature name=\"HockeyApp\"><param name=\"android-package\" value=\"com.zengularity.cordova.hockeyapp.HockeyApp\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"CallNumber\"><param name=\"android-package\" value=\"mx.ferreyra.callnumber.CFCallNumber\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"EmailComposer\"><param name=\"android-package\" value=\"de.martinreinhardt.cordova.plugins.email.EmailComposer\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -66,6 +74,20 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />",
+                            "count": 1
+                        }
+                    ],
+                    "/*": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.CALL_PHONE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-feature android:name=\"android.hardware.telephony\" android:required=\"false\" />",
                             "count": 1
                         }
                     ]
@@ -102,6 +124,12 @@
             "PACKAGE_NAME": "io.cordova.myapp6cb5f3"
         },
         "cordova-plugin-hockeyapp": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "mx.ferreyra.callnumber": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-email": {
             "PACKAGE_NAME": "io.cordova.surgipal"
         }
     },
@@ -179,6 +207,23 @@
                 "hockeyapp",
                 "hockeyApp"
             ]
+        },
+        {
+            "id": "mx.ferreyra.callnumber.CallNumber",
+            "file": "plugins/mx.ferreyra.callnumber/www/CallNumber.js",
+            "pluginId": "mx.ferreyra.callnumber",
+            "clobbers": [
+                "call"
+            ]
+        },
+        {
+            "id": "cordova-plugin-email.EmailComposer",
+            "file": "plugins/cordova-plugin-email/www/email_composer.js",
+            "pluginId": "cordova-plugin-email",
+            "clobbers": [
+                "cordova.plugins.email",
+                "plugin.email"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -191,6 +236,8 @@
         "cordova-plugin-inappbrowser": "1.7.1",
         "cordova-sqlite-storage": "1.4.8",
         "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
-        "cordova-plugin-hockeyapp": "2.2.4"
+        "cordova-plugin-hockeyapp": "2.2.4",
+        "mx.ferreyra.callnumber": "0.0.2",
+        "cordova-plugin-email": "1.2.6"
     }
 }

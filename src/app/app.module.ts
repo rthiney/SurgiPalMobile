@@ -10,7 +10,7 @@ import { Storage } from '@ionic/storage';
 //3rd Party
 import { MomentModule } from 'angular2-moment';
 import { AppInsightsModule, AppInsightsErrorHandler } from 'ng2-appinsights';
-
+ 
 //General Components
 import { SurgiPalApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
@@ -24,9 +24,11 @@ import { PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails, SurgeryData 
 import { MessageListPage, MessageReplyModal, MessageData, MessageDetailPage } from "../pages/message/index";
 import { AuthService, NotifyService, LoggerService } from "../shared/index";
 import { HockeyApp } from 'ionic-hockeyapp';
- 
-//TEST, FutureData
-
+import { AddSurgeryComponent } from "../pages/add-surgery/add-surgery.component"; 
+//TEST, FutureData  
+ import { IonicNativePlugin } from '@ionic-native/core'
+import { CallNumber } from '@ionic-native/call-number';
+import { EmailComposer } from '@ionic-native/email-composer';
 let storage = new Storage();
 
 export function getAuthHttp(http) {
@@ -50,16 +52,7 @@ export function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
-};
-
-//export function getAuthHttp(http) {
-//    console.log('getAuthHttp');
-//    return new AuthHttp(new AuthConfig({
-//        globalHeaders: [{ 'Accept': 'application/json' }],
-//        tokenGetter: (() => window.localStorage.getItem('id_token'))
-//    }), http);
-//}
-
+}; 
 @NgModule({
     declarations: [
         SurgiPalApp,
@@ -67,14 +60,14 @@ export function debounce(func, wait, immediate) {
         ContactPage,
         AccountPage,
         SupportPage,
-        HomePage,
- 
+        HomePage, 
         PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails,
         MessageListPage, MessageDetailPage, MessageReplyModal,
         CalendarPage,
-        TabsPage 
+        TabsPage ,
+        AddSurgeryComponent 
     ],
-    imports: [AppInsightsModule,
+    imports: [AppInsightsModule ,
         BrowserModule, HttpModule, MomentModule,
         IonicModule.forRoot(SurgiPalApp)
     ],
@@ -89,7 +82,8 @@ export function debounce(func, wait, immediate) {
         PulsePage, SurgeryDetailPage, CodeDetails, BillingDetails,
         MessageListPage, MessageDetailPage, MessageReplyModal,
         CalendarPage,
-        TabsPage 
+        TabsPage ,
+        AddSurgeryComponent 
     ],
     providers: [
         AuthService,

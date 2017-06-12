@@ -1,3 +1,5 @@
+import { EmailComposer } from '@ionic-native/email-composer';
+import { CallNumber } from '@ionic-native/call-number';
 import { LoginPage } from './../pages/login/login';
 
 import { Component, ViewChild } from '@angular/core';
@@ -37,7 +39,7 @@ export interface PageInterface {
 
 @Component({
     templateUrl: 'app.html',
-    providers: [SurgeryData, MessageData]
+    providers: [SurgeryData, MessageData,CallNumber,EmailComposer]
 })
 export class SurgiPalApp {
     isLab: boolean;

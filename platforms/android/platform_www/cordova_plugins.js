@@ -72,6 +72,23 @@ module.exports = [
             "hockeyapp",
             "hockeyApp"
         ]
+    },
+    {
+        "id": "mx.ferreyra.callnumber.CallNumber",
+        "file": "plugins/mx.ferreyra.callnumber/www/CallNumber.js",
+        "pluginId": "mx.ferreyra.callnumber",
+        "clobbers": [
+            "call"
+        ]
+    },
+    {
+        "id": "cordova-plugin-email.EmailComposer",
+        "file": "plugins/cordova-plugin-email/www/email_composer.js",
+        "pluginId": "cordova-plugin-email",
+        "clobbers": [
+            "cordova.plugins.email",
+            "plugin.email"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -86,7 +103,9 @@ module.exports.metadata =
     "cordova-plugin-inappbrowser": "1.7.1",
     "cordova-sqlite-storage": "1.4.8",
     "cordova-plugin-ms-azure-mobile-apps": "2.0.0",
-    "cordova-plugin-hockeyapp": "2.2.4"
+    "cordova-plugin-hockeyapp": "2.2.4",
+    "mx.ferreyra.callnumber": "0.0.2",
+    "cordova-plugin-email": "1.2.6"
 };
 // BOTTOM OF METADATA
 });
