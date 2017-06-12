@@ -14,6 +14,7 @@ import { AuthService, NotifyService, LoggerService, CONFIGURATION } from "../../
   templateUrl: 'pulse.html'
 })
 export class PulsePage {
+  title: string;
   // the list is a child of the schedule page
   // @ViewChild('scheduleList') gets a reference to the list
   // with the variable #scheduleList, `read: List` tells it to return
@@ -87,18 +88,19 @@ export class PulsePage {
     if (this.segment == 'today') {
       this.shownSurgeries = this.surgeryData.data.todaySurgeries;
       this.surgeries =    this.shownSurgeries
- 
+ this.title = 'Today\'s Pulse for '+ this.date.toDateString();
     }
     if (this.segment == 'past') {
       this.app.setTitle('Past Surgeries');
       this.shownSurgeries = this.surgeryData.data.pastSurgeries;
       this.surgeries =     this.shownSurgeries
- 
+  this.title = 'Past Surgeries';
     }
     if (this.segment == 'future') {
       this.app.setTitle('Future Surgeries');
       this.shownSurgeries = this.surgeryData.data.shownSurgeries;
       this.surgeries = this.surgeryData.data.shownSurgeries;
+      this.title = 'Future Surgeries';
     }
      console.log('this.shownSurgeries',      this.shownSurgeries);
       console.log('this.surgeries',      this.surgeries);

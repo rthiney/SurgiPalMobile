@@ -7,7 +7,7 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content class="outer-content map-page"> 
+<ion-content class="outer-content map-page">
     <ion-row>
         <ion-col>
             <div padding-top text-center *ngIf="auth.name">
@@ -15,10 +15,10 @@
                 <h2> {{auth.name}}</h2>
 
 
-   <p><strong>ID: </strong> {{auth.globalId}}</p>
-        <p><strong>SpID: </strong> {{auth.fosId}}</p>
-    <p><strong>Surgery Stats: </strong> {{surgeryMetrics | json}}</p>
-        <p><strong>Message Stats: </strong> {{messageMetrics | json}}</p>
+                <p><strong>ID: </strong> {{auth.globalId}}</p>
+                <p><strong>SpID: </strong> {{auth.fosId}}</p>
+                <p><strong>Surgery Stats: </strong> {{surgeryMetrics | json}}</p>
+                <p><strong>Message Stats: </strong> {{messageMetrics | json}}</p>
                 <!--<ion-list inset>
                     <button ion-item (click)="updatePicture()">Update Picture</button>
                     <button ion-item (click)="changeUsername()">Change Username</button>
@@ -43,18 +43,8 @@
             </div>
         </ion-col>
         <ion-col>
-            <ion-card>
-                 <div style="height: 100%; width: 100%" #mapCanvas id="map_canvas"></div>
-                <ion-card-header>        <h2> {{auth.name}}</h2></ion-card-header>
-                <ion-card-title> <img src="{{auth.picture}}" alt="avatar">
-        
-</ion-card-title>
-                <ion-card-content> 
-                    
-                
-                </ion-card-content>   
-            </ion-card>
-          
+
+            <div style="height: 100%; width: 100%" #mapCanvas id="map_canvas"></div>
         </ion-col>
     </ion-row>
 

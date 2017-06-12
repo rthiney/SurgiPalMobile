@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-        <ion-title>Today's Pulse for {{date | date:'shortDate'}}</ion-title>
+        <ion-title>{{ title}}</ion-title>
         <ion-segment [(ngModel)]="segment" (ionChange)="updateSegment()">
             <ion-segment-button value="today">
                 Today
@@ -358,7 +358,7 @@
             </ion-card>
         </ion-list>
         <ion-list-header [hidden]="surgeries > 0" *ngSwitchCase="'past'">
-            No Surgeries today {{ todaySurgeries | json}}
+            No Past Surgeries
         </ion-list-header>
     </div>
 </ion-content>
