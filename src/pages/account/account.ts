@@ -1,3 +1,4 @@
+import { LoginPage } from './../login/login';
  
 import {SurgeryData} from '../pulse/index';
 import { HockeyApp } from 'ionic-hockeyapp';
@@ -10,7 +11,7 @@ import {SupportPage} from '../support/support';
 import { NotifyService } from "../../shared/index";
 import { MessageData } from "../message/index";
 import { SurgeryMetrics,MessageMetrics } from "../../models/metrics";
-declare var google: any;
+ declare  var google:any;
 
 @Component({
   selector: 'page-account',
@@ -33,31 +34,31 @@ export class AccountPage {
   }
   ionViewDidLoad() {
 
-       var myCenter = new google.maps.LatLng(this.auth.latitude,this.auth.longitude);
-         var mapProp =   {
-          center: myCenter,
-          zoom: 25
-       };
-   let mapEle = this.mapElement.nativeElement;
-     var map=new google.maps.Map(mapEle,mapProp);
+  //      var myCenter = new google.maps.LatLng(this.auth.latitude,this.auth.longitude);
+  //        var mapProp =   {
+  //         center: myCenter,
+  //         zoom: 25
+  //      };
+  //  let mapEle = this.mapElement.nativeElement;
+  //    var map=new google.maps.Map(mapEle,mapProp);
     
-          let infoWindow = new google.maps.InfoWindow({
-            content: `<h5>${this.auth.name}</h5>`
-          });
+  //         let infoWindow = new google.maps.InfoWindow({
+  //           content: `<h5>${this.auth.name}</h5>`
+  //         });
 
-          let marker = new google.maps.Marker({
-            position: myCenter,
-            map: map, 
-            title: this.auth.name
-          });
+  //         let marker = new google.maps.Marker({
+  //           position: myCenter,
+  //           map: map, 
+  //           title: this.auth.name
+  //         });
 
-          marker.addListener('click', () => {
-            infoWindow.open(map, marker);
-          });
+  //         marker.addListener('click', () => {
+  //           infoWindow.open(map, marker);
+  //         });
       
-        google.maps.event.addListenerOnce(map, 'idle', () => {
-         // map.classList.add('show-map');
-        });
+  //       google.maps.event.addListenerOnce(map, 'idle', () => {
+  //        map.classList.add('show-map');
+  //       });
  
   }
  
@@ -119,7 +120,7 @@ this.messageMetrics = this.messageSvc.metrics;
 
   logout() {
     this.auth.logout();
-    this.nav.setRoot(AboutPage);
+    this.nav.setRoot(LoginPage);
   }
 
   support() {

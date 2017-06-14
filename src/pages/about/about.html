@@ -25,23 +25,17 @@
         </ion-segment>
     </ion-toolbar>
 
-
 </ion-header>
 
 <ion-content>
-    <div class="about-header">
-        <img src="assets/img/background2.jpg" height=200 width='100%' alt="SurgiPal">
-    </div>
-    <div padding class="about-info">
-        <h4>SurgiPal</h4>
-        <p>
-            A physician driven cloud-based preference card system and OR platform for surgeries and procedures
-        </p>
-    </div>
-
-
     <div [ngSwitch]="info" padding class="about-info">
-        <ion-list *ngSwitchCase="'services'">
+        <ion-list *ngSwitchCase="'services'" class="services">
+            <div padding class="about-header">
+                <h1>Services</h1>
+            </div>
+            <p class='text'>
+                A physician driven cloud-based preference card system and OR platform for surgeries and procedures
+            </p>
             <p class='text'> Doctors, hospitals, ambulatory surgery centers (ASCs) and vendors deserve easy to use tools that facilitate the process of planning, booking and billing for surgeries and procedures. Surgipal was created by a team of physicians to bring surgical
                 preference cards into the digital age. Surgipal allows physicians to create, edit and manage their surgery or procedure preference cards online. Doctors and their staff setup, maintain and update their preference cards. Surgeries and procedures
                 are scheduled online with preference cards specifically tailored to the patient. Hospitals, ASCs and vendors access these preferences anywhere and anytime for planning and booking purposes. Doctors can bill for surgeries online with the
@@ -50,67 +44,84 @@
 
         <ion-list *ngSwitchCase="'benefits'">
 
+            <div padding class="about-header">
+                <h1>Benefits</h1>
+            </div>
+
             <ion-card>
                 <ion-item>
-    <ion-avatar item-right>
-    <img src="assets/img/flat-avatar.png">
-    </ion-avatar>
-    <h1>   Consistent!</h1>
-    <p> Works at all your surgical locations. Change your preferences and all locations will know about it!</p>
-  </ion-item> 
-            </ion-card>
+                    <ion-avatar item-left>
+                        <img src="assets/img/flat-avatar.png">
+                    </ion-avatar>
+                    <h1> Consistent!</h1>
+                </ion-item>
+                <ion-card-content>
+                    <p> Works at all your surgical locations. Change your preferences and all locations will know about it!</p>
+                </ion-card-content>
 
-
-     <ion-card>
-                <ion-item>
-    <ion-avatar item-right>
-    <img src="assets/img/flat-avatar.png">
-    </ion-avatar>
-    <h1> Empowering!</h1>
-    <p>   Take over control and ownership of your surgery or procedure preferences with minimal work.</p>
-  </ion-item> 
-            </ion-card>
-
-           
-
-            <ion-card>  
-                  <ion-item>
-             <ion-avatar item-right>
-    <img src="assets/img/flat-avatar.png">
-    </ion-avatar>
-    <h1>Accurate!</h1>
-            
-    <p>                    Do away with generic cards. Every patient is different and surgeries vary. Create personalized surgical preferences specifically designed for your patient so the OR or procedure suite can plan ahead!
-      </p> </ion-item>
             </ion-card>
 
             <ion-card>
                 <ion-item>
-             <ion-avatar item-right>
-    <img src="assets/img/flat-avatar.png">
-    </ion-avatar><h1>Reassuring!</h1>
-            
-        <p>
-                    Doing a case on a weekend without your favorite team? Your preferences are viewable to your staff online anywhere and anytime.
-                </p> </ion-item>
+                    <ion-avatar item-right>
+                        <img src="assets/img/flat-avatar.png">
+                    </ion-avatar>
+                    <h1> Empowering!</h1>
+                </ion-item>
+                <ion-card-content>
+                    <p> Take over control and ownership of your surgery or procedure preferences with minimal work.</p>
+                </ion-card-content>
+
+            </ion-card>
+
+            <ion-card>
+                <ion-item>
+                    <ion-avatar item-left>
+                        <img src="assets/img/flat-avatar.png">
+                    </ion-avatar>
+                    <h1>Accurate!</h1>
+                </ion-item>
+                <ion-card-content>
+                    <p> Do away with generic cards. Every patient is different and surgeries vary. Create personalized surgical preferences specifically designed for your patient so the OR or procedure suite can plan ahead!
+                    </p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card>
+                <ion-item>
+                    <ion-avatar item-left>
+                        <img src="assets/img/flat-avatar.png">
+                    </ion-avatar>
+                    <h1>Reassuring!</h1>
+                </ion-item>
+                <ion-card-content>
+                    <p>
+                        Doing a case on a weekend without your favorite team? Your preferences are viewable to your staff online anywhere and anytime.
+                    </p>
+                </ion-card-content>
+
             </ion-card>
             <ion-card>
 
                 <ion-item>
-             <ion-avatar item-right>
-    <img src="assets/img/flat-avatar.png">
-    </ion-avatar><h1>Billing!</h1>
-           
-                <p>
-                    Bill for your surgeries by simply clicking a button. All your cases are logged for data analytics.
-                </p>  </ion-item>
+                    <ion-avatar item-left>
+                        <img src="assets/img/flat-avatar.png">
+                    </ion-avatar>
+                    <h1>Billing!</h1>
+                </ion-item>
+                <ion-card-content>
+                    <p>
+                        Bill for your surgeries by simply clicking a button. All your cases are logged for data analytics.
+                    </p>
+                </ion-card-content>
             </ion-card>
-
 
         </ion-list>
 
         <ion-list *ngSwitchCase="'who'">
-
+            <div padding class="about-header">
+                <h1>Who are we?</h1>
+            </div>
 
             <ion-card>
                 <ion-item>
@@ -120,7 +131,6 @@
                     <h2>Jean Marc Voyadzis, MD FACS</h2>
                     <p>Chief Executive Officer</p>
                 </ion-item>
-
 
                 <ion-card-content>
                     <p c>Jean-Marc Voyadzis, MD, is associate professor in the Department of Neurosurgery and co-director of the Center for Minimally Invasive Spine Surgery at MedStar Georgetown. He is also director of Neurosurgery Service at Calvert Memorial
@@ -135,7 +145,7 @@
 
                 <ion-row>
                     <ion-col>
-                        <button ion-button color="primary" clear small icon-left>
+                        <button ion-button color="vimeo" clear small icon-left (click)="openurl('https://www.linkedin.com/in/raphaelthiney/')">
             <ion-icon name="logo-linkedin"></ion-icon> 
           </button>
                     </ion-col>
@@ -144,11 +154,11 @@
              <ion-icon name="logo-github"></ion-icon> 
           </button>
                     </ion-col>
-                    <ion-col center text-center>
+                    <!--<ion-col center text-center>
                         <button ion-button color="primary" clear small icon-left>
          <ion-icon name="logo-facebook"></ion-icon>
           </button>
-                    </ion-col>
+                    </ion-col>-->
                 </ion-row>
             </ion-card>
 
@@ -176,50 +186,24 @@
 
                 <ion-row>
                     <ion-col>
-                        <button ion-button color="primary" clear small icon-left>
+                        <button ion-button color="vimeo" clear small icon-left (click)="openurl('https://www.linkedin.com/in/raphaelthiney/')">
             <ion-icon name="logo-linkedin"></ion-icon> 
           </button>
                     </ion-col>
                     <ion-col>
-                        <button ion-button color="primary" clear small icon-left>
+                        <button ion-button color="primary" clear small icon-left (click)="openurl('https://github.com/rthiney')">
              <ion-icon name="logo-github"></ion-icon> 
           </button>
                     </ion-col>
-                    <ion-col center text-center>
+                    <!--<ion-col center text-center>
                         <button ion-button color="primary" clear small icon-left>
          <ion-icon name="logo-facebook"></ion-icon>
           </button>
-                    </ion-col>
+                    </ion-col>-->
                 </ion-row>
             </ion-card>
 
-
         </ion-list>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </ion-content>

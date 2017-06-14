@@ -1,43 +1,45 @@
-.about-header {
-    padding: 16px;
-    width: 100%;
-    min-height: 150px;
-    text-align: center;
-}
-
-.about-info ion-card-header {
-    font-weight: bold;
-}
-
-.about-header img {
-    // max-width: 200px;
-    // min-height: 115px;
-    // margin-left: -15px;
-    padding: 25px 0 20px 0;
-}
-
-.about-info p {
-    color: #697072;
-    text-align: left;
-}
-
-.about-info ion-icon {
-    color: color($colors, twitter);
-    width: 50px;
-}
-
-.md,
-.wp {
-    .about-info [text-right] {
-        margin-right: 0;
+$big-bg: '../assets/img/rooms/s2.PNG';
+page-about {
+    .scroll-content {
+        // background-image: url(http://lorempixel.com/400/200/sports/1/);
+        background-image: url($big-bg)   ;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        background-size:auto 100%;
+  
     }
-}
-
-.ios .about-info {
-    text-align: left;
-}
-
-.ios .about-info ion-icon {
-    // width: auto;
-    // margin-right: 10px;
+    .about-header {
+        h1 {
+            color: color($colors, light);
+        }
+        p {
+            color: color($colors, light);
+            text-align: left;
+        }
+    }
+    .about-info {
+        background-color: inherit;
+        .services {
+            p {
+                font-size: 1em;
+                color: color($colors, light);
+                text-align: left;
+            }
+        }
+    }
+    .about-info ion-card-header {
+        font-weight: bold;
+        color: white;
+        p {
+            color: #697072;
+            text-align: left;
+        }
+    }
+    .about-info ion-list {
+        background: transparent;
+    }
+    .about-info ion-icon {
+        color: color($colors, twitter);
+        width: 50px;
+    }
 }

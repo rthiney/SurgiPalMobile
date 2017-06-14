@@ -17,4 +17,8 @@ info: string = "services";
     let popover = this.popoverCtrl.create(PopoverPage);
     popover.present({ ev: event });
   }
+
+  openurl(url: string) {
+    window.open(url, '_blank'); 
+  }
 }

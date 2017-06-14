@@ -1,18 +1,14 @@
 // Styles for all of the user pages:
 // Login, Signup, Support
-
-page-user {
-  .logo {
-    padding: 20px 0;
-    min-height: 200px;
-    text-align: center;
-
-    img {
-      max-width: 150px;
-    }
+$big-bg: '../assets/img/background2.jpg';
+page-login {
+  .scroll-content {
+    // background-image: url(http://lorempixel.com/400/200/sports/1/);
+    background-image: url($big-bg)  ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
   }
+ 
 
-  .list {
-    margin-bottom: 0;
-  }
 }
