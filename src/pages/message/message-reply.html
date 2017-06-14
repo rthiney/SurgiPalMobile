@@ -4,7 +4,7 @@
             Reply
         </ion-title>
         <ion-buttons start>
-            <button ion-button (click)="send()"> 
+            <button ion-button (click)="dismiss()"> 
         <ion-icon name="close"  ></ion-icon>
       </button> 
         </ion-buttons>
@@ -37,14 +37,13 @@
                 <ion-textarea formControlName="message" rows="6" required></ion-textarea>
             </ion-item>
         </ion-list>
-
-
-        <p color="danger" *ngIf="!mailForm.controls.subject.valid  && mailForm.controls.subject.dirty && !mailForm.message.subject.valid  && mailForm.message.subject.dirty">
+ <!--&& mailForm.controls.subject.dirty && !mailForm.message.subject.valid && mailForm.message.subject.dirty"-->
+        <p color="danger" *ngIf="!mailForm.controls.subject.valid">
             Not a valid message.
         </p>
 
         <div padding>
-            <button ion-button block type="submit">Submit</button>
+            <button ion-button block (click)="send()" >Submit</button>
         </div>
     </form>
 

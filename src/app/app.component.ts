@@ -22,6 +22,8 @@ import { AuthService, LoggerService, NotifyService } from "../shared/index";
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { HockeyApp } from 'ionic-hockeyapp';
 import { CalendarPage } from "../pages/calendar/calendar";
+import { HomePage } from "../pages/home/home";
+import { MessageService } from "../pages/message/message.service";
 
 //declare var WindowsAzure: any;
 // ar client = new WindowsAzure.MobileServiceClient(AzureMobile.url);
@@ -39,7 +41,7 @@ export interface PageInterface {
 
 @Component({
     templateUrl: 'app.html',
-    providers: [SurgeryData, MessageData,CallNumber,EmailComposer]
+    providers: [SurgeryData, MessageService,MessageData,CallNumber,EmailComposer]
 })
 export class SurgiPalApp {
     isLab: boolean;
@@ -143,6 +145,7 @@ export class SurgiPalApp {
 
                         this.rootPage = AboutPage;
                         this.enableMenu(true);
+                        this.menu.toggle();
                         this.auth.startupTokenRefresh();
                         // this.auth.authWithRivals();  // now handled in event handler
                         this.events.publish('user:authenticated', 'from getRefreshToken');
@@ -200,7 +203,7 @@ export class SurgiPalApp {
     loadDataBackground() {
         setTimeout(() => {
             this.getMessageData();
-            this.getSurgeryData();
+           this.getSurgeryData();
         }, 3000);
     }
 
@@ -211,7 +214,8 @@ export class SurgiPalApp {
         this.events.subscribe('user:authenticated', (n) => {
             this.log.console('EVENT FIRED user:authenticated ' + n, this.auth);
             this.loadDataBackground();
-            this.nav.setRoot(this.appPages[0].component, { tabIndex: 0 });
+         //   this.nav.setRoot(this.appPages[0].component, { tabIndex: 0 });
+         this.nav.setRoot(HomePage);
             this.enableMenu(true);
         });
         this.events.subscribe('user:loginstorage', (n) => {
@@ -247,33 +251,36 @@ export class SurgiPalApp {
         console.groupEnd();
     }
     getMessageData() {
-        console.group("Message Data");
+        
         console.log('Getting MessageData Background', this.auth.user);
         this.messageSvc.getMetrics().subscribe((data: any) => {
             this.appPages[2].badgeValue = data.unread;
+            console.log('MessageData Background completed');
         },
             err => {
                 console.error(err);
+               
             },
             () => {
-                console.log('MessageData Background completed');
+                
             });
-        console.groupEnd();
+     
     }
     getSurgeryData() {
-        console.group("Surgery Data");
+    
         console.log('Getting SurgeryData Background');
         this.surgerySvc.getMetrics().subscribe((data: any) => {
             this.appPages[0].badgeValue = data.today;
             this.appPages[1].badgeValue = data.future;
+            console.log('SurgeryData Background completed');
         },
             err => {
                 console.log(err);
             },
             () => {
-                console.log('SurgeryData Background completed');
+                
             });
-    console.groupEnd();
+   
     }
     enableMenu(loggedIn: boolean) {
         this.menu.enable(loggedIn, 'loggedInMenu');

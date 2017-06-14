@@ -7,9 +7,9 @@
 
     <ion-content>
         <ion-card ion-item *ngIf="auth.authenticated()">
-            <ion-item *ngIf="auth.picture">
+            <ion-item>
                 <ion-avatar item-left>
-                    <img src="{{ auth.picture }}">
+                    <img src="{{ auth.getPicture() }}">
                 </ion-avatar>
                 <h2>{{ auth.name }}</h2>
                 <p>{{ auth.email }}</p> 

@@ -1,4 +1,4 @@
-  $big-bg: '../assets/img/rooms/background.jpg';
+  $big-bg: '../assets/img/background2.jpg';
   page-home {
       .center {
           text-align: center;
@@ -8,7 +8,7 @@
           background-image: url($big-bg);
           -webkit-background-size: cover;
           -moz-background-size: cover;
-          background-size: auto 100%;
+          background-size: cover;
       }
       .ionic-logo {
           display: inline-flex;

@@ -29,6 +29,7 @@
 <ion-content>
     <ion-refresher (ionRefresh)="doRefresh($event)">
         <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing Surgeries">
+            Pull to refresh
         </ion-refresher-content>
     </ion-refresher>
 
@@ -50,13 +51,13 @@
             <ion-item-group *ngFor="let group of groups" [hidden]="group.surgeries==0">
 
          
-            <ion-item-divider sticky color="light" *ngIf="group.surgeries.length>0" >
+            <ion-item-divider sticky color="light" *ngIf="group.surgeries?.length>0" >
                 <ion-label>
                     {{group.d}}
                 </ion-label>
 
                 <ion-note item-right text-right> 
-          {{group.surgeries.length}}  Surgeries
+          {{group.surgeries?.length}}  Surgeries
       </ion-note>
             </ion-item-divider>
 
@@ -83,14 +84,14 @@
     <ion-icon name="barcode" item-left large color="primary"></ion-icon>
     <h2>CPT Codes</h2>
     <p>{{s.surgery.cpt}}</p>
-     <ion-note item-right>{{s.cptArray.length}} codes</ion-note>
+     <ion-note item-right>{{s.cptArray?.length}} codes</ion-note>
   </button>
 
                         <button ion-item (click)="showEditCodes(s,'DX')">
     <ion-icon name="barcode" item-left  large color="primary"></ion-icon>
     <h2>DX Codes</h2>
     <p>{{s.surgery.diagnosisCode}}</p>
- <ion-note item-right>{{s.dxArray.length}} codes</ion-note>
+ <ion-note item-right>{{s.dxArray?.length}} codes</ion-note>
   </button>
                            
                            
@@ -118,7 +119,7 @@
 
             </ion-item-group>
         </ion-list>
-        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'future'">
+        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'future'" color="light">
             No Scheduled Surgeries in the future..
         </ion-list-header>
 
@@ -183,14 +184,14 @@
     <ion-icon name="barcode" item-left small color="primary"></ion-icon>
     <h2>CPT Codes</h2>
     <p>{{s.surgery.cpt}}</p>
-     <ion-note item-right>{{s.cptArray.length}} codes</ion-note>
+     <ion-note item-right>{{s.cptArray?.length}} codes</ion-note>
   </button>
 
                         <button ion-item (click)="showEditCodes(s,'DX')">
     <ion-icon name="barcode" item-left  small color="facebook"></ion-icon>
     <h2>DX Codes</h2>
     <p>{{s.surgery.diagnosisCode}}</p>
- <ion-note item-right>{{s.dxArray.length}} codes</ion-note>
+ <ion-note item-right>{{s.dxArray?.length}} codes</ion-note>
   </button>
 
 
@@ -223,7 +224,7 @@
                         <ion-item-sliding>
                             <button ion-item clear item-left (click)="cancelSurgery(s,cardItem)"> <ion-icon name="close-circle" item-left small color="danger"></ion-icon>
                                 <h2>Cancel</h2>
-                                <p>Cancel surgery and remove from this list!</p>
+                                <p>Cancel surgery and remove from this list!</p> 
                                 <ion-note item-right>{{s.surgery.coordinatorName}}  </ion-note> <ion-icon name="more" item-right small color="facebook"></ion-icon>
                         </button>
                             <ion-item-options side="right">
@@ -240,7 +241,7 @@
                 </ion-card-content>
             </ion-card>
         </ion-list>
-        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'today'">
+        <ion-list-header [hidden]="shownSurgeries > 0" *ngSwitchCase="'today'" color="primary">
             <p> No Surgeries Today :( </p>
         </ion-list-header>
 
@@ -260,7 +261,8 @@
 
 
 
-
+<!--<ion-list #surgeryList *ngSwitchCase="'past'" [virtualScroll]="pastSurgeries" no-lines>
+    <div *virtualItem="let s" style="width: 100%">-->
 
         <ion-list #surgeryList *ngSwitchCase="'past'">
             <ion-card *ngFor="let s of pastSurgeries;   let i = index;" #slidingItem>

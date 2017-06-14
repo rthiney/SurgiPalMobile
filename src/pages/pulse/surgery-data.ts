@@ -19,6 +19,8 @@ import 'rxjs/add/observable/of';
 export class SurgeryData {
   data: any;
   metrics: SurgeryMetrics = new SurgeryMetrics();
+
+  surgeries:SurgeryGroupItem[]=[];
   groupedSurgeries = [];
   constructor(public authHttp: AuthHttp, public auth: AuthService, public events: Events) { }
 
@@ -28,12 +30,13 @@ export class SurgeryData {
       return Observable.of(this.data);
     } else {
       var d = new Date();
-      //  var month = d.getUTCMonth() + 1; //months from 1-12
+        var month = d.getUTCMonth() +1; //months from 1-12
+        
       //  var day = d.getUTCDate();
       //  var year = d.getUTCFullYear();
-      var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
-      // var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
-
+     var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId;
+     // var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/' + this.auth.fosId + '/' + month + '/' + day + '/0';
+ 
       //  var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12';
       //   var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/today/12';
       // var url = CONFIGURATION.baseUrls.apiUrl + 'surgeries/all/12/6/1/2017';
@@ -42,12 +45,25 @@ export class SurgeryData {
         .map(this.processData, this)
     }
   }
+  saveData() {
+    console.group('Saving Surgery Data');
+    try {
+      this.auth.storage.set('surgeriesStoreDate', new Date().toJSON());
+      this.auth.storage.set('surgeries', this.data);
+    }
+    catch (e) {
+      console.error(e);
+    }
+    console.groupEnd();
+  }
 
   processData(data: any) {
+
     console.group('Processs Surgery Data');
     // just some good 'ol JS fun with objects and arrays
     // build up the data by linking speakers to sessions
     this.data = data.json();
+    this.saveData();
     this.groupedSurgeries = [];
     this.data.surgeriesCompleted = [];
     this.data.surgeriesNotCompleted = [];
@@ -69,7 +85,7 @@ export class SurgeryData {
         surgery.diagnosisCode = surgery.diagnosisCode.replace('level,', 'level ');
 
         let newSurgery =new SurgeryGroupItem(surgery);
-      
+        this.surgeries.push(newSurgery);
         if (d.toLocaleDateString() != currentDate) {  ///group by date
           currentDate = d.toLocaleDateString();
 
@@ -134,10 +150,12 @@ export class SurgeryData {
         }
       }
       catch (e) {
-        console.log('Error in surgery' + surgery.surgeryId, e.toString());
+        console.info('Error in surgery' + surgery.surgeryId, e.toString());
       }
     });
-
+    console.info('Processs Surgery Data Complete', this.data);
+    console.groupEnd();
+  
     this.data.groupedSurgeries = this.groupedSurgeries.sort((a: SurgeryGroup, b: SurgeryGroup) => {
       return a.realDate.getDate() - b.realDate.getDate();
     });
@@ -178,12 +196,27 @@ export class SurgeryData {
     this.metrics.future = this.data.futureSurgeries.length;
     this.metrics.past = this.data.pastSurgeries.length;
     this.metrics.today = this.data.todaySurgeries.length;
-    this.data.metrics = this.metrics;
-    console.log('Processed SurgeryDone', this.data)
-
+    this.data.metrics = this.metrics; 
+    //get rid of empty future groups. 
+    console.log('Processed Surgery Metrics Done', this.metrics) 
     console.groupEnd();
-    return this.data;
+    this.reduceGroup();
+    return this.data; 
+  }
 
+  reduceGroup(){
+    console.group('Reduce Surgery Group');
+    console.log('Old Surgery group count', this.data.groupedSurgeries.length);
+    let newGroups: SurgeryGroup[] = [];
+    this.data.groupedSurgeries.forEach((group: SurgeryGroup) => {
+   
+      if (group.surgeries.length > 0)
+        newGroups.push(group);
+    });
+    this.data.groupedSurgeries = newGroups;
+    console.log('New Surgery group count', this.data.groupedSurgeries.length); 
+    console.groupEnd();
+    console.groupCollapsed('Reduce Surgery Group');
   }
   getTime(date?: Date) {
     return date != null ? date.getTime() : 0;

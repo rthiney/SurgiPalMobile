@@ -1,5 +1,5 @@
 import { MessageService } from './message.service';
-import { MessageMetrics } from './../../models/metrics';
+import { MessageMetrics, MessageGroupItem } from './../../models/metrics';
 import { DoctorMessageModel } from './../../models/viewmodels';
 import { MessageReplyModal } from './message-reply';
 
@@ -7,7 +7,6 @@ import { Component, ViewChild } from '@angular/core';
 import { ActionSheet, ActionSheetController, Config, NavController, LoadingController, App, ModalController, ToastController, Events, List } from 'ionic-angular';
 import { InAppBrowser } from 'ionic-native';
 import { MessageDetailPage } from '../message-detail/message-detail';
-
 
 import { AuthService, NotifyService, LoggerService } from "../../shared/index";
 import { DoctorMessage } from "../../models/DoctorMessage";
@@ -30,9 +29,9 @@ export class MessageListPage {
   confDate: string;
   groupedMessages = [];
   actionSheet: ActionSheet;
-  messages: DoctorMessageModel = [];
-  messagesRead: DoctorMessageModel = [];
-  messagesUnread: DoctorMessageModel = [];
+  messages: MessageGroupItem[] = [];
+  messagesRead: MessageGroupItem[] = [];
+  messagesUnread: MessageGroupItem[] = [];
   segment = 'unread';
   constructor(
     public app: App,
@@ -60,42 +59,52 @@ export class MessageListPage {
 
       this.updateSchedule(false);
 
-
   }
-
 
   subscribeToEvents() {
     this.events.subscribe('messagedata:markedRead', (n) => {
-      console.log('messagedata:markedRead', n);
+      console.log('EVENT CAPTURED: messagedata:markedRead', n);
       //  alert('messagedata:markedRead' + n.toString());
+
+      // if (this.segment == "unread") {
+      //   var index: number = this.messages.indexOf(n, 0);
+      //   this.messages.splice(index, 1);
+      //   this.updateSchedule(true);
+      // }
       this.updateSchedule(true);
       //  this.messageData = n
     });
-    this.events.subscribe('messagedata:updated', (n) => {
-      //     alert('messagedata:updated' + n.toString());
-      //   this.appinsightsService.setAuthenticatedUserContext(this.auth.user.name, this.auth.user.global_client_id);
-      // this.messageData = n
-    });
+ 
   }
-  updateSchedule(refresh: boolean) {
+  updateSchedule(refresh: boolean = false, refresher: any = null) {
     let cntl = this.note.presentLoading('Getting Messages...');
+    this.messages = null;
+    this.metrics = null;
     this.messageList && this.messageList.closeSlidingItems();
-    this._service.getMessages(this.queryText, this.segment, refresh).subscribe((data: any) => {
-      // this.events.publish('message:filtered', data.unreadCount);
-      console.log(data);
-      this.shownMessages = data.shownMessages;
-      this.groups = data;
-      this.metrics = data.metrics;
-      //      console.log('Grouped After Filter Data:',data);
-      // this.groupedSurgeries =data.filter(w =>w.hide==false); //data.groupedSurgeries;
-      // console.log('Grouped After Filter:', data.filter(w =>w.hide==false));
-      console.log('getMessages', data);
-      console.log('      this.shownMessages', this.shownMessages)
-      console.log('      this.groups', this.groups)
-      console.log('      this.metrics', this.metrics)
+
+    try { 
+      this._service.getMessages(this.queryText, this.segment, refresh).subscribe((data: any) => {
+        // this.events.publish('message:filtered', data.unreadCount);
+        this.messages = (this.segment == "read") ? this._service.readMessages : (this.segment == "unread") ? this._service.unreadMessages : this._service.messages;
+        this.metrics = this._service.metrics;
+        //      console.log('Grouped After Filter Data:',data);
+        // this.groupedSurgeries =data.filter(w =>w.hide==false); //data.groupedSurgeries;
+        // console.log('Grouped After Filter:', data.filter(w =>w.hide==false));
+        if (refresher)
+          refresher.complete();
+        console.log('      this.messages', this.messages)
+        console.log('      this.metrics', this.metrics)
+
+        //  this.groups = data.surgeryType;
+      }, err => {
+        console.error(err);
+        cntl.dismiss();
+      });
+    } catch (error) {
+      console.error(error);
       cntl.dismiss();
-      //  this.groups = data.surgeryType;
-    });
+    }
+    cntl.dismiss();
   }
 
   updateSegment() {
@@ -103,72 +112,86 @@ export class MessageListPage {
   }
 
   doRefresh(refresher) {
-    this.groups = [];
-    this.updateSchedule(true);
-    refresher.complete();
+    this.auth.storage.remove('messagesStoreDate');
+    this.auth.storage.remove('messages');
+    this.updateSchedule(true, refresher);
+
   }
 
   delete(msg?) {
     console.log('Delete Message', msg);
     this._msgService.deleteMessage(msg).then((a) => {
       console.log('Delete DONE', msg);
-      this.groups = [];
+      this.messages = [];
       this.updateSchedule(true);
     });
   }
 
   deleteGroup(grp: any) {
-    console.group("Group Message Delete");
-    grp.messages.forEach((g: DoctorMessageModel) => { 
+ 
+    grp.messages.forEach((g: DoctorMessageModel) => {
       this._msgService.deleteMessage(g.message).then((a) => {
         console.log('Delete DONE', g.message);
-      }); 
+        
       });
-      console.groupEnd();
-  }
-  
-  reply(msg ?) {
-        // this.insight.trackEvent('Message Reply');
-        let modal = this.modalCtrl.create(MessageReplyModal, { msg: msg });
-        modal.present();
-        modal.onWillDismiss((data: string) => {
-          if (data) {
-            this.updateSchedule(false);
-          }
-        });
-      }
-
-  showDetails(msg: DoctorMessageModel) { 
-        /// this.insight.trackTrace('Message Detail');
-        this.log.console('showing message detail', msg);
-        this.navCtrl.push(MessageDetailPage, msg);
-      }
+    });
  
-  showContactInfo(msg: any) {
-        let mode = this.config.get('mode');
-        // this.insight.trackEvent('Message Contact Info');   
-        let actionSheet = this.actionSheetCtrl.create({
-          title: 'Contact ' + msg,
-          buttons: [
-            {
-              text: `Email ( ${msg.email} )`,
-              icon: mode !== 'ios' ? 'mail' : null,
-              handler: () => {
-                window.open('mailto:' + msg.email);
-              }
-            },
-            {
-              text: `Call ( ${msg.phone} )`,
-              icon: mode !== 'ios' ? 'call' : null,
-              handler: () => {
-                window.open('tel:' + msg.phone);
-              }
-            }
-          ]
-        }); 
-        actionSheet.present();
+  }
+
+  reply(msg?) {
+    // this.insight.trackEvent('Message Reply');
+    let modal = this.modalCtrl.create(MessageReplyModal, { msg: msg });
+    modal.present();
+    modal.onWillDismiss((data: string) => {
+      if (data) {
+        this.updateSchedule(false);
       }
-
-
+    });
+  }
+  showDetails(msg: MessageGroupItem) {
+    // this.insight.trackEvent('Message Reply');
+    let modal = this.modalCtrl.create(MessageDetailPage, msg );
+    modal.present();
+    modal.onWillDismiss((data: string) => {
+      if (data) {
+        this.updateSchedule(false);
+      }
+    });
+  }
+  showDetails2(msg: MessageGroupItem) {
+    /// this.insight.trackTrace('Message Detail'); 
+    this.log.console('showing message detail', msg);
+    this.navCtrl.push(MessageDetailPage, msg);
+  }
+  failure(error: any) {
+    let errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    this.log.error(errMsg); // log to console instead
+    return errMsg;
+  }
+  showContactInfo(msg: any) {
+    let mode = this.config.get('mode');
+    // this.insight.trackEvent('Message Contact Info');   
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Contact ' + msg,
+      buttons: [
+        {
+          text: `Email ( ${msg.email} )`,
+          icon: mode !== 'ios' ? 'mail' : null,
+          handler: () => {
+            window.open('mailto:' + msg.email);
+          }
+        },
+        {
+          text: `Call ( ${msg.phone} )`,
+          icon: mode !== 'ios' ? 'call' : null,
+          handler: () => {
+            window.open('tel:' + msg.phone);
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
 
 }

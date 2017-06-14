@@ -54,20 +54,18 @@ export class BillingDetails {
       var content = new helper.Content(
         'text/html', 'I\'m replacing the <strong>body tag</strong>');
       var mail = new helper.Mail(from_email, subject, to_email, content);
-      var personalization = mail.getPersonalizations();
-      personalization[0].addSubstitution(new helper.CustomArgs('-surgeon-', 'Me Surgeon'));
-      personalization[0].addSubstitution(new helper.Substitution('-patient-', 'Me Patient'));
-
-      personalization[0].addSubstitution(new helper.Substitution('-surgeon-', this.surgery.firstName + ' ' + this.surgery.lastName));
-      personalization[0].addSubstitution(new helper.Substitution('-patient-', this.surgery.initials));
-      personalization[0].addSubstitution(new helper.Substitution('-surgeryname-', this.surgery.patient));
-
-      personalization[0].addSubstitution(new helper.Substitution('-cpt-', this.surgery.cpt));
-      personalization[0].addSubstitution(new helper.Substitution('-dx-', this.surgery.diagnosisCode));
-
-      personalization[0].addSubstitution(new helper.Substitution('-surgerydate-', d.toLocaleDateString()));
-      personalization[0].addSubstitution(new helper.Substitution('-surgerytime-', d.toLocaleTimeString()));
-      personalization[0].addSubstitution(new helper.Substitution('-messageid-', this.surgery.surgeryId.toString()));
+     
+     // var personalization = mail.getPersonalizations();
+     var  personalization = new helper.Personalization() 
+      personalization.addSubstitution(new helper.Substitution('-surgeon-', this.surgery.firstName + ' ' + this.surgery.lastName));
+      personalization.addSubstitution(new helper.Substitution('-patient-', this.surgery.initials));
+      personalization.addSubstitution(new helper.Substitution('-surgeryname-', this.surgery.patient)); 
+      personalization.addSubstitution(new helper.Substitution('-cpt-', this.surgery.cpt));
+      personalization.addSubstitution(new helper.Substitution('-dx-', this.surgery.diagnosisCode)); 
+      personalization.addSubstitution(new helper.Substitution('-surgerydate-', d.toLocaleDateString()));
+      personalization.addSubstitution(new helper.Substitution('-surgerytime-', d.toLocaleTimeString()));
+      personalization.addSubstitution(new helper.Substitution('-messageid-', this.surgery.surgeryId.toString()));
+      personalization.addTo(mail)
       mail.setTemplateId(SendGridVars.billingTemplate);
       var sg = require('sendgrid')(SendGridVars.key);
 

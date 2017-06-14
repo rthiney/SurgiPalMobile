@@ -73,7 +73,6 @@ export class AuthService {
     //   client: WindowsAzure.MobileServiceClient;
     constructor(private authHttp: AuthHttp, zone: NgZone, public http: Http, public events: Events) {
 
-
         this.zoneImpl = zone;
         // Check if there is a profile saved in local storage
         this.storage.get('profile').then(profile => {
@@ -87,10 +86,6 @@ export class AuthService {
         }).catch(error => {
             console.error("No profile in storage.");
         });
-
-
-
-
 
         this.lock.on('authenticated', authResult => {
             console.log('authResult', authResult);
@@ -107,7 +102,6 @@ export class AuthService {
                 console.log('getProfile', profile);
 
                 this.dumpProfileVariables(profile);
-
 
                 //save to tables
                 this.saveToMobileClientTable();
@@ -133,7 +127,7 @@ export class AuthService {
         this.picture = profile.picture || '';
         this.created_at = profile.created_at;
         this.updated_at = profile.updated_at;
-        this.image = profile.image || '';
+        this.image = 'https://surgipal.com/uploads/avatars/' + profile.image || 'assets/img/flat.png';
         this.email = profile.email || '';
         this.first = profile.first || '';
         this.last = profile.last || '';
@@ -198,7 +192,6 @@ export class AuthService {
             console.error("RefreshJWT No profile in storage.",error);
         });
 
-
         return new Promise((resolve) => {
             if (!refresh_token) {
                 console.log('    resolve(false);');
@@ -239,8 +232,6 @@ export class AuthService {
 
     public logout() {
 
-
-
         this.storage.remove('profile');
         this.storage.remove('id_token');
         this.storage.remove('refresh_token');
@@ -253,7 +244,6 @@ export class AuthService {
         this.unscheduleRefresh();
        // this.lock.show();
     }
-
 
     public scheduleRefresh() {
         // If the user is authenticated, use the token stream
@@ -351,8 +341,6 @@ export class AuthService {
 
                 //   this.dumpProfileVariables(profile);
 
-
-
                 // });
             });
         })
@@ -361,7 +349,6 @@ export class AuthService {
             });
 
     }
-
 
     hasFavorite(sessionName: string): boolean {
         return (this._favorites.indexOf(sessionName) > -1);
@@ -378,8 +365,10 @@ export class AuthService {
         }
     };
 
-
-
+   getPicture(): string {
+       return (this.image!=null && this.image.length>0) ? this.image : this.picture;    
+ 
+    };
     setUsername(username: string): void {
         this.storage.set('username', username);
     };

@@ -229,8 +229,9 @@ export class PulsePage {
   // }
 
   doRefresh(refresher) {
-    this.updateSchedule(true, refresher);
-
+    this.auth.storage.remove('surgeriesStoreDate');
+    this.auth.storage.remove('surgeries');
+    this.updateSchedule(true, refresher); 
   }
 
   private handleError(error: any): Promise<any> {

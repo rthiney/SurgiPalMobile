@@ -1,21 +1,83 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>Message Detail</ion-title>
-    </ion-navbar>
-</ion-header>
-
-
+    <ion-toolbar>
+         <button ion-button>
+        <ion-icon   name="mail" item-left large color="primary"></ion-icon>
+        </button>
+        <ion-title>
+            Message Detail
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button (click)="dismiss()"> 
+        <ion-icon name="close"  ></ion-icon>
+      </button>
+        </ion-buttons> 
+    </ion-toolbar>
+</ion-header> 
 
 <ion-content padding  class="message-detail">
-    <h1>{{message.subject}}</h1> 
+   
+<ion-card>
+    <ion-item>
+        <ion-avatar item-left>
+            <img [src]="message.DoctorImage"> 
+        </ion-avatar>
+        <h2>{{message.subject}}</h2>
+        <p> {{message.createdAt | date:'longDate' }} <br> {{message.createdAt | date:'shortTime' }}<br> </p>
+    </ion-item>
+    <ion-card-content>
+        <p>{{message.message}}</p>
+    </ion-card-content>
 
-       <p>   {{message.createdAt | date:'shortDate' }} at  {{message.createdAt | date:'shortTime' }} 
-    </p>
+    <ion-row>
+        <ion-col>
+        <ion-icon name="eye" small></ion-icon>
+        <div>Last seen on {{messageAzure?.updatedAt | date:'longDate' }} <br> {{messageAzure?.updatedAt | date:'shortTime' }}<br></div>
+        </ion-col>
+        <ion-col>
+        <ion-icon name="text"></ion-icon>
+        <div>{{messageAzure?.viewcount}} Views</div>
+        </ion-col>
+        <ion-col center text-center>
+            <ion-note>
+                <i>( {{message.createdAt | amTimeAgo}}) </i>
+            </ion-note>
+        </ion-col>
+    </ion-row>
 
-
-   <p *ngIf="message.HospitalEmail">{{message.HospitalEmail}}</p>
-     <p *ngIf="message.email">{{message.email}}</p>
-    <p>{{message.message}}</p>
-
-    {{messageData?.viewcount}}
+</ion-card>
 </ion-content>
+<!--
+        <ion-item-sliding *virtualItem="let m" [attr.class]="m.message.viewed ? 'isRead1' : 'isRead0'">
+            <i class="ion-email"></i>
+            <ion-icon name="email"></ion-icon>
+            <ion-item >
+                <ion-avatar item-left>
+                    <ion-img [src]="m.message.DoctorImage"></ion-img>
+                </ion-avatar>
+                <h2>{{m.message.subject}} </h2>
+                <h3>{{m.message.message}} </h3>
+                <h2>{{m.message.viewed}} </h2>
+                <h2>{{m.message.DoctorImage}} </h2>
+                <ion-note item-right text-right> {{m.message.createdAt | date:'longDate' }} <br> {{m.message.createdAt | date:'shortTime' }}<br> <i>( {{m.message.createdAt | amTimeAgo}}) </i>
+
+                </ion-note>
+
+            </ion-item>
+            <ion-item-options side="left">
+                <button ion-button color="danger" (click)="delete(m.message)">
+        <ion-icon name="trash"></ion-icon>
+        Delete
+      </button>
+
+            </ion-item-options>
+            <ion-item-options side="right">
+                <button ion-button color="primary" (click)="reply(m.message)">
+        <ion-icon name="mail"></ion-icon>
+        Reply
+      </button>
+            </ion-item-options>
+        </ion-item-sliding>
+ 
+    </ion-list>-->
+
+

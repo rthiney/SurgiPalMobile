@@ -1,5 +1,5 @@
 import { PulseViewModel } from './viewmodels/pulse_model';
-
+import { DoctorMessageModel } from "./viewmodels/index";
 
 export class SurgeryMetrics {
     cards?: Array<string> = [];
@@ -22,7 +22,7 @@ export class MessageMetrics {
 export class SurgeryGroup {
     d: string;
     realDate: Date;
-    surgeries: PulseViewModel[];
+    surgeries: SurgeryGroupItem[];
     hide: boolean = false;
     constructor(date: Date) {
         this.d = date.toLocaleDateString();
@@ -43,3 +43,28 @@ export class SurgeryGroupItem {
             this.hide = false;
     }
 }
+export class MessageGroup {
+    d: string;
+    realDate: Date;
+    messages: MessageGroupItem[];
+    hide: boolean = false;
+    constructor(date: Date) {
+        this.d = date.toLocaleDateString();
+        this.realDate = date;
+        this.messages = [];
+        this.hide = false;
+    }
+}
+    export class MessageGroupItem {
+        message: DoctorMessageModel;
+        views: number=0;
+        hide: boolean = false;
+        read: boolean = false;
+        replied :boolean=false;
+        replied_on:Date;
+        constructor(_o: DoctorMessageModel) { 
+           this.message = _o;  
+            this.read=_o.viewed; 
+        }
+}
+ 

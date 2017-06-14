@@ -18,9 +18,6 @@ import { EmailComposer } from '@ionic-native/email-composer';
 })
 export class TabsPage {
 
-
- 
-
   // this tells the tabs component which Pages
   // should be each tab's root Page
   loading: any;
@@ -59,22 +56,19 @@ export class TabsPage {
     //   this.messageData = metrics.unread
     // });
     this.events.subscribe('message:metrics', (metrics) => { 
- console.group('Events');
+ 
       console.log('MESSAGE METRICS EVENT CAPTURED TABS PAGE ', metrics)
       this.messageData = metrics.unread 
-      console.groupEnd();
+ 
     });
     this.events.subscribe('surgery:metrics', (metrics) => {
        console.group('Events');
       console.log('SURGERY METRICS EVENT CAPTURED TABS PAGE  ', metrics)
       this.pulseData = metrics.today;
-      this.futureData = metrics.future;
-         console.groupEnd();
+      this.futureData = metrics.future; 
       //  this.appPages[0].badgeValue = metrics.today;
-      //this.appPages[2].badgeValue = metrics.pending;
-
+      //this.appPages[2].badgeValue = metrics.pending; 
     });
-
 
   }
 

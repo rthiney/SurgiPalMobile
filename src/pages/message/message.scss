@@ -3,18 +3,34 @@
      border-left: 2px solid map-get($colors, primary);
      padding-left: 10px;
  }
- 
+  ion-item-sliding{
+      background-color:red;
+  }
+
  page-message-list {
      .scroll-content {
          background: #EDEDED;
      }
-     .message-card {
+ 
+     ion-item-sliding .message-card {
          height: 100%;
          display: flex;
          flex-direction: column;
          ion-card-content {
              flex: 1 1 auto;
          }
+          .isRead1 {
+              background-color:map-get($colors, light);
+              border-left: 0px solid red;
+              padding-left: 10px;
+              font-weight: bold;
+          } 
+          .isRead0 {
+              border-left: 2px solid map-get($colors, secondary);
+              padding-left: 10px;
+              background-color: map-get($colors, light);
+              background: transparent;
+          }
      }
      .message-card ion-card-header .item {
          padding: 4px 16px;
@@ -24,20 +40,7 @@
          padding-right: 0;
      }
  }
- 
- .isRead1 {
-     border-left: 0px solid red;
-     padding-left: 10px;
-     font-weight: bold;
- }
- 
- .isRead0 {
-     border-left: 2px solid map-get($colors, secondary);
-     padding-left: 10px;
-     background-color: map-get($colors, light);
-     background: transparent;
- }
- 
+
  // .ios, .md {
  //     page-home {
  //         .header-image {
