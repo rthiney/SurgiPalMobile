@@ -20,7 +20,7 @@ coverage/
 dist/
 node_modules/
 tmp/
-temp/  
+ temp/
 $RECYCLE.BIN/
 
 .DS_Store
