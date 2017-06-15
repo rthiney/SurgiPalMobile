@@ -12,8 +12,8 @@
             </ion-segment-button>
             <ion-segment-button value="unread">
  Unread
- 
-                <ion-badge color="favorite" item-right>{{metrics?.unread}} <ion-icon name="mail"></ion-icon></ion-badge>
+<ion-icon name="mail"></ion-icon>
+                <ion-badge color="favorite" item-right>{{metrics?.unread}} </ion-badge>
             </ion-segment-button>
             <ion-segment-button value="read" >
  Read
@@ -71,8 +71,7 @@
                     </ion-avatar>
                     <h2>{{m.message.subject}} </h2>
                     <h3>{{m.message.message}} </h3>
-                        <h2>{{m.message.viewed}} </h2>
-                              <h2>{{m.message.DoctorImage}} </h2>
+                
                     <ion-note item-right text-right> {{m.message.createdAt | date:'longDate' }} <br> {{m.message.createdAt | date:'shortTime' }}<br> <i>( {{m.message.createdAt | amTimeAgo}}) </i>
 
                     </ion-note>

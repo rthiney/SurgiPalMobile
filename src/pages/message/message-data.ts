@@ -32,15 +32,18 @@ export class MessageData {
             console.log("LOADING FROM SERVER");
             var url = CONFIGURATION.baseUrls.apiUrl + 'messages/doctors/' + this.auth.fosId;
             console.log('URL:', url);
+            
+           // this.auth.storage.get('messages').then((sve: any) => this.processData(sve)) 
+
             return this.authHttp.get(url)
                 .map(this.processData, this)
         }
     }
-    saveData() {
+    saveData(data: any) {
         console.group('Saving Message Data');
         try {
             this.auth.storage.set('messagesStoreDate', new Date().toJSON());
-            this.auth.storage.set('messages', this.data);
+            this.auth.storage.set('messages', data);
         }
         catch (e) {
             console.error(e);
@@ -52,8 +55,9 @@ export class MessageData {
         console.group('Processs Message Data');
         // just some good 'ol JS fun with objects and arrays
         // build up the data by linking speakers to sessions
+        this.saveData(data);
         this.data = data.json();
-        this.saveData()
+      
         let currentDate = '';
         let currentMessages = [];
         this.groupedMessages = [];

@@ -1,0 +1,48 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-email": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-hockeyapp": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "mx.ferreyra.callnumber": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "io.cordova.surgipal"
+        }
+    },
+    "dependent_plugins": {}
+}
