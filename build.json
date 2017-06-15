@@ -1,7 +1,7 @@
 {
   "android": {
     "release": {
-      "keystore": "d:\\surgipalmobile.keystore",
+      "keystore": "surgipalmobile.keystore",
       "storePassword": "12qw!@QW",
       "alias": "rthiney",
       "password": "12qw!@QW",

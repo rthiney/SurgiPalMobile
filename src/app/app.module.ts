@@ -30,6 +30,7 @@ import { AddSurgeryComponent } from "../pages/add-surgery/add-surgery.component"
 import { CallNumber } from '@ionic-native/call-number';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { LoginPage } from "../pages/login/login";
+import { PopoverPage } from "../pages/about-popover/about-popover";
 let storage = new Storage();
 
 export function getAuthHttp(http) {
@@ -63,7 +64,7 @@ export function debounce(func, wait, immediate) {
 @NgModule({
     declarations: [
         SurgiPalApp,
-        AboutPage,
+        AboutPage, PopoverPage,
         ContactPage,
         AccountPage,
         SupportPage,
@@ -82,7 +83,7 @@ export function debounce(func, wait, immediate) {
     bootstrap: [IonicApp],
     entryComponents: [
         SurgiPalApp,
-        AboutPage,
+        AboutPage, PopoverPage,
         ContactPage,
         AccountPage,
         SupportPage,
